@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * Implements hook_uninstall. 
+ */
+function message_broker_dummy_integration_uninstall() {
+    variable_del('message_broker_dummy_integration_config');
+}

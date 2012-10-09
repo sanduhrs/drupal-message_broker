@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * Implements hook_menu, registers the hello world example.
+ */
+function message_broker_integration_example_menu() {
+    $items = array();
+
+    $items['admin/config/system/message_broker_integration_example'] = array(
+        'title' => 'Message broker integration example',
+        'description' => 'A small hello world example that demonstrates the message broker integration',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('message_broker_integration_example_form'),
+        'type' => MENU_NORMAL_ITEM,
+        'access arguments' => array('administer site configuration')
+    );
+
+    return $items;
+}
+
+/**
+ * Form for the hello world example.
+ * @param type $form
+ * @param type $form_state
+ * @return string 
+ */
+function message_broker_integration_example_form($form, &$form_state) {
+    $form['title'] = array('#markup' => '<h2>Hello world example</h2>');
+    $form['intro'] = array('#markup' => '<p>This form lets you send a message to the exchange "helloWorld". The routing key will be "helloWorld.name_you_entered".');
+    $form['intro2'] = array('#markup' => '<p>The example declares two queues that are bound to this exchange. Enter any name to see the first consumer and "Drupal" to see the second one.');
+    
+    $form['name'] = array('#type' => 'textfield', '#required' => TRUE, '#title' => 'Say hello to');
+
+    $form['submit'] = array('#type' => 'submit', '#value' => 'Send message');
+    
+    return $form;
+}
+
+/**
+ * Submit function for the hello world example, that sends a message.
+ * @param array $form
+ * @param array $form_state 
+ */
+function message_broker_integration_example_form_submit(&$form, &$form_state) {
+    $broker = message_broker_integration_get();
+    $message = new stdClass();
+    $message->name = $form_state['values']['name'];
+    
+    $broker->sendMessage(json_encode($message), 'helloWorld', array('routing_key'=>'helloWorld.' . $message->name));
+}
+
+/**
+ * Implements hook_message_broker_consumers.
+ * @param string $selfName name of this drupal instance
+ * @return string 
+ */
+function message_broker_integration_example_message_broker_consumers($selfName) {
+    $consumers = array();
+    
+    // An example consumer implemented using a closure.
+    // The array key "helloWorldToEveryone" is the name of this consumer - use this name
+    // for the drush command, i.e. "drush cons helloWorldToEveryhone". This will
+    // start only this consumer.
+    $consumers['helloWorldToEveryone'] = array('queue' => 'helloWorldForAll', 'callback' => function($message, \Closure $ack) {
+        $message = json_decode($message->body);
+        if (function_exists('drush_print')) {
+            drush_print('Hello world, ' . $message->name);
+        } else {
+            drupal_set_message('Hello world, ' . $message->name);
+        }
+        
+        $ack();
+    });
+    
+    // This consumer will only give a special hello to "Drupal", see the example_config to understand why
+    // (look at the routing keys)
+    $consumers['specialHelloWorld'] = array('queue' => 'helloWorldForDrupal', 'callback' => '_message_broker_integration_example_special_hello_world');
+    
+    return $consumers;
+}
+
+/**
+ * An example consumer that outputs a special hello.
+ * @param stdClass $message
+ * @param \Closure $ack 
+ */
+function _message_broker_integration_example_special_hello_world($message, \Closure $ack) {
+    
+    $message = json_decode($message->body);
+    
+    if (function_exists('drush_print')) {
+        drush_print('A special hello to ' . $message->name . '!');
+    } else {
+        drupal_set_message('A special hello to ' . $message->name . '!');
+    }
+
+    $ack();
+}

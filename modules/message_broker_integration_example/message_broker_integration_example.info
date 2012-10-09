@@ -1,0 +1,8 @@
+core = 7.x
+
+name = Message Broker Integration Example
+description = Example for the usage of the message broker integration
+version = "7.x-0.1"
+php = 5.3
+package = "Messagebroker"
+dependencies[] = message_broker_integration

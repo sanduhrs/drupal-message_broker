@@ -1,0 +1,11 @@
+core = 7.x
+
+name = Message Broker AMQP Integration
+description = A message broker integration that uses the AMQP protocol to communicate with servers like RabbitMQ
+version = "7.x-0.1"
+php = 5.3
+package = "Messagebroker"
+dependencies[] = xautoload
+dependencies[] = libraries
+dependencies[] = message_broker_integration
+configure = admin/config/system/message_broker_amqp_integration
