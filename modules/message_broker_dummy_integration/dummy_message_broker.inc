@@ -26,11 +26,15 @@ class DummyMessageBroker implements \IMessageBroker {
 
     /**
      * Sends a message to the message broker. 
-     * @param mixed $body
+     * @param string $body
      * @param string $routingKey
      * @param string $exchange
      */
-    public function sendMessage($body, $destination, array $options = array()) {       
+    public function sendMessage($body, $destination, array $options = array()) {
+        if (!is_string($body)) {
+            throw new InvalidArgumentException('The message body must be a string! Serialize your data to json, xml or anything you prefer.');
+        }
+        
         $exchange = $this->findExchangeByName($destination);
         
         if ($exchange === false) {

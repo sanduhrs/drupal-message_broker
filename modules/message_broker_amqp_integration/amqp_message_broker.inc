@@ -125,6 +125,10 @@ class AmqpMessageBroker implements \IMessageBroker {
      * @param array $options
      */
     public function sendMessage($body, $destination, array $options = array()) {
+        if (!is_string($body)) {
+            throw new InvalidArgumentException('The message body must be a string! Serialize your data to json, xml or anything you prefer.');
+        }
+        
         $routingKey = "";
         
         if (isset($options['routing_key'])) {

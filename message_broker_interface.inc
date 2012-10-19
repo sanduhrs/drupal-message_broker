@@ -8,7 +8,7 @@ interface IMessageBroker {
     
     /**
      * Sends a message to the message broker. 
-     * @param mixed $body
+     * @param string $body
      * @param string $destination
      * @param array $options
      */
