@@ -69,7 +69,8 @@ function message_broker_dummy_integration_menu() {
  * @return array 
  */
 function message_broker_dummy_integration_settings($form, &$form_state) {
-    // todo: validate the file, it should exist and it should be a valid json file
+    $form['intro'] = array('#markup' => '<p>' . t('Specify the path to the message broker configuration file which contains the definitions for all exchanges and queues.') . '</p>');
+    
     $form['message_broker_dummy_integration_config'] = array(
         '#type' => 'textfield',
         '#title' => t('Path to json configuration file'),

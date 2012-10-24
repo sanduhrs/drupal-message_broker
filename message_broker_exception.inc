@@ -1,32 +1,29 @@
 <?php
 
 /**
- * General Exception
+ * General exception which is thrown by the module in case something went wrong.
  */
 class MessageBrokerException extends Exception {
     
 }
 
 /**
- * Represents a critical error. The application is not able
- * to proceed at this state and should be restarted.
- * The message broker infrastructure catches these exceptions
- * and termines the process.
+ * An exception a consumer should throw to indicate that a message is invalid.
+ * This message broker integration module will catch the exception, ack the message
+ * and call a invalidMessageHandler.
  */
-class CriticalErrorException extends MessageBrokerException {
+class InvalidMessageException extends Exception {
     
 }
 
-/**
- * The Message is corrupt
- */
-class InvalidMessageException extends MessageBrokerException {
-    
-}
 
 /**
- * The Content of the Message can't be handled.
+ * An exception a consumers should throw to indicate a critical
+ * error. This means that application is not able
+ * to proceed at this state.
+ * The message broker infrastructure catches these exceptions,
+ * terminates the process, allowing you to restart the process.
  */
-class InvalidMessageBodyException extends InvalidMessageException {
+class CriticalErrorException extends Exception {
     
 }

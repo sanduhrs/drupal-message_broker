@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Dummy implementation of the IMessageBroker interface.
+ */
 class DummyMessageBroker implements \IMessageBroker {
     
     protected $consumers;
@@ -27,8 +30,8 @@ class DummyMessageBroker implements \IMessageBroker {
     /**
      * Sends a message to the message broker. 
      * @param string $body
-     * @param string $routingKey
-     * @param string $exchange
+     * @param string $destination
+     * @param array $options
      */
     public function sendMessage($body, $destination, array $options = array()) {
         if (!is_string($body)) {
@@ -37,7 +40,7 @@ class DummyMessageBroker implements \IMessageBroker {
         
         $exchange = $this->findExchangeByName($destination);
         
-        if ($exchange === false) {
+        if ($exchange === FALSE) {
             throw new MessageBrokerException('The specified exchange name is not known, check your json configuration file!');
         }
         
@@ -56,27 +59,42 @@ class DummyMessageBroker implements \IMessageBroker {
     
     /**
      * Consume message using the specified consumer.
-     * @param type $consumer 
+     * @param string $body
+     * @param array $consumer
+     * @param string $consumerName
      */
     protected function callConsumer($body, $consumer, $consumerName) {
         $message = new stdClass();
         $message->body = $body;
-        $acked = false;
+        $acked = FALSE;
+        $invalidMessage = FALSE;
         
         try {
             drupal_set_message('Start consuming a message with "' . $consumerName . '"');
             call_user_func($consumer['callback'], $message, function() use(&$acked) {
-                $acked = true;
+                $acked = TRUE;
             });
+        } catch (InvalidMessageException $e) {
+            if (!$acked) {
+                $acked = TRUE;
+                watchdog_exception('dummy_message_broker', $e);
+                watchdog('dummy_message_broker', 'Invalid message catched, body: ' . $body);
+            }
+
+            $invalidMessage = TRUE;
+            
+            if (isset($consumer['invalidMessageHandler'])) {
+                call_user_func($consumer['invalidMessageHandler'], $message);
+            }
         } catch (Exception $e) {
-            watchdog(WATCHDOG_ERROR, 'An exception was raised while consuming a message by the "' . $consumerName . '". Message: ' . print_r($body, 1));
+            watchdog(WATCHDOG_ERROR, 'An exception was raised while consuming a message by the "' . $consumerName . '". Message: ' . $body);
             watchdog_exception('dummy_message_broker', $e);
         }
         
         if (!$acked) {
-            watchdog(WATCHDOG_WARNING, 'A message was not processed successfully, because it was not acked by the consumer "' . $consumerName . '"! Message: ' . print_r($body, 1));
+            watchdog('dummy_message_broker', 'A message was not processed successfully, because it was not acked by the consumer "' . $consumerName . '"! Message: ' . $body);
             drupal_set_message('A message was not processed successfully, it was not acked by the consumer "' . $consumerName . '"!', 'warning');
-        } else {
+        } else if (!$invalidMessage) {
             drupal_set_message('Message was processed successfully by consumer "' . $consumerName . '".');
         }
     }
@@ -90,22 +108,22 @@ class DummyMessageBroker implements \IMessageBroker {
      */
     protected function matchRoutingKey($routingKey, $pattern) {
         if ($pattern == '#') {
-            return true;
+            return TRUE;
         }
         
         $routingElements = explode('.', $routingKey);
         $patternElements = explode('.', $pattern);
-        $matches = true;
+        $matches = TRUE;
         
         if (empty($routingElements)) {
-            return false;
+            return FALSE;
         }
 
         foreach ($patternElements as $pos => $pattern) {
             if ($pattern == '#') {
                 if ($pos == count($patternElements) - 1) {
                     // we allow the hash at the end, other positions are not supported at the moment
-                    $matches = $matches && true; // the hash stands for anything
+                    $matches = $matches && TRUE; // the hash stands for anything
                     break;
                 } else {
                     throw new MessageBrokerException('Pattern matching with "#" hashes within the pattern is not implemented yet!');

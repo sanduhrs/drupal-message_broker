@@ -85,6 +85,8 @@ function message_broker_integration_settings($form, &$form_state) {
         }
     }
     
+    $form['intro'] = array('#markup' => '<p>' . t('Choose the implementation you want to use for sending and receiving messages.<br />Visit the configuration page for the chosen implementation to see more options.') . '</p>');
+    
     $form['message_broker_integration_implementation'] = array(
         '#type' => 'radios',
         '#options' => $options,
@@ -102,10 +104,21 @@ function message_broker_integration_settings($form, &$form_state) {
     return system_settings_form($form);
 }
 
+/**
+ * Gets the self-name of this drupal instance.
+ * @return string
+ */
 function message_broker_integration_get_website_name(){
     return variable_get('message_broker_integration_self', '');
 }
 
+/**
+ * Throw a critical error exception.
+ * @param string $message
+ * @param string $code
+ * @param mixed $previous
+ * @return \CriticalErrorException
+ */
 function message_broker_integration_throw_critical_error($message = null, $code = null, $previous = null) {
     // we include the file manually to prevent the drupal autoloading. which
     // uses DB calls

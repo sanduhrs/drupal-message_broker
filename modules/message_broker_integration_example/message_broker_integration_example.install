@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Implements hook_enable.
+ * Implements hook_enable. This will set the configuration path
+ * in the existing integration modules.
  */
 function message_broker_integration_example_enable() {
     if (module_exists('message_broker_dummy_integration')) {
