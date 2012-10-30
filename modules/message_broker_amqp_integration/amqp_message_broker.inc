@@ -220,7 +220,7 @@ class AmqpMessageBroker implements \IMessageBroker {
                         watchdog('amqp_message_broker', 'An critical exception was raised while consuming a message by the "' . $consumerName . '". Message: ' . print_r($message, 1));
                         watchdog_exception('amqp_message_broker', $e);
                         
-                        die();
+                        die(1);
                     } catch (Exception $e) {
                         $logger->logError("An exception was raised while consuming a message. Exception of type \"" . get_class($e) . "\": " . $e->getMessage() . "\nstacktrace: " . $e->getTraceAsString() . "\n");
                         watchdog('amqp_message_broker', 'An exception was raised while consuming a message by the "' . $consumerName . '". Message: ' . print_r($message, 1));
