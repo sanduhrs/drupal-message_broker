@@ -5,5 +5,4 @@ description = Integrates a message broker into drupal, enables modules to work e
 version = 7.x 1.0
 php = 5.3
 package = "Messagebroker"
-version = "7.x-0.1"
 configure = admin/config/system/message_broker_integration
