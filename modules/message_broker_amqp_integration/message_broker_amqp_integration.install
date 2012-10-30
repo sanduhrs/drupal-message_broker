@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implements hook_uninstall. 
+ * Implements hook_uninstall(). 
  */
 function message_broker_amqp_integration_uninstall() {
     variable_del('message_broker_amqp_integration_host');
@@ -13,7 +13,7 @@ function message_broker_amqp_integration_uninstall() {
 }
 
 /**
- * Implements hook_requirements and searches for the required PHP Amqp library.
+ * Implements hook_requirements() and searches for the required PHP Amqp library.
  */
 function message_broker_amqp_integration_requirements($phase) {
     $requirements = array();

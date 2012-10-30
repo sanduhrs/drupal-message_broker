@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implements the hook_drush_command that registers drush commands.
+ * Implements hook_drush_command() for registering the consuming command.
  * @return array 
  */
 function message_broker_amqp_integration_drush_command() {
@@ -28,10 +28,10 @@ function message_broker_amqp_integration_drush_command() {
 
 /**
  * Implements the drush command "consume-amqp-messages".
- * @param string $consumerName
+ * @param string $consumer_name
  * @return boolean 
  */
-function drush_message_broker_amqp_integration_consume_amqp_messages($consumerName = '') {
+function drush_message_broker_amqp_integration_consume_amqp_messages($consumer_name = '') {
     try {
         $broker = message_broker_integration_get();
     } catch (MessageBrokerException $e) {
@@ -42,17 +42,17 @@ function drush_message_broker_amqp_integration_consume_amqp_messages($consumerNa
         return drush_print(dt('Error: This drush command only works if you set the message broker configuration to AMQP. Please visit admin/config/system/message_broker_integration'));
     }
     
-    $messageBrokerHost = variable_get('message_broker_amqp_integration_host', 'localhost');
-    $messageBrokerPort = variable_get('message_broker_amqp_integration_port', '5672');
-    drush_print(dt('Connected successfully to the AMQP message broker at ') . $messageBrokerHost . ':' . $messageBrokerPort);
+    $message_broker_host = variable_get('message_broker_amqp_integration_host', 'localhost');
+    $message_broker_port = variable_get('message_broker_amqp_integration_port', '5672');
+    drush_print(dt('Connected successfully to the AMQP message broker at ') . $message_broker_host . ':' . $message_broker_port);
     
-    if (empty($consumerName)) {
+    if (empty($consumer_name)) {
         drush_print(dt('Starting all consumers ...'));
     } else {
-        drush_print(dt('Starting the consumer "' . $consumerName . '" ...'));
+        drush_print(dt('Starting the consumer "' . $consumer_name . '" ...'));
     }
     
-    $broker->consumeMessages($consumerName, (int)drush_get_option('count-messages', null), new DrushConsumerLogger());
+    $broker->consumeMessages($consumer_name, (int)drush_get_option('count-messages', null), new DrushConsumerLogger());
     
     return TRUE;
 }

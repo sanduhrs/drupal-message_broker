@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * DrushConsumerLogger that prints messages to the console.
+ */
 class DrushConsumerLogger implements IConsumerLogger {
     
     function logInfo($message) {
