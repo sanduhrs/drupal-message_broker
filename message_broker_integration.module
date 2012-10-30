@@ -6,7 +6,7 @@ require_once 'message_broker_integration.api.inc';
 
 /**
  * Returns all known message broker integration implementatinons.
- * @return array 
+ * @return array
  */
 function _message_broker_integration_get_implementations() {
     return module_invoke_all('message_broker_integration_implementation');
@@ -26,9 +26,9 @@ function _message_broker_integration_get_consumers() {
  * @throws MessageBrokerException if no implementation is configured
  */
 function message_broker_integration_get() {
-    static $cachedImplementation = null;
+    static $cachedImplementation = NULL;
     
-    if ($cachedImplementation == null) {
+    if ($cachedImplementation == NULL) {
         $implementations = _message_broker_integration_get_implementations();
         $implementationKey = variable_get('message_broker_integration_implementation', '');
         
@@ -119,7 +119,7 @@ function message_broker_integration_get_website_name(){
  * @param mixed $previous
  * @return \CriticalErrorException
  */
-function message_broker_integration_throw_critical_error($message = null, $code = null, $previous = null) {
+function message_broker_integration_throw_critical_error($message = NULL, $code = NULL, $previous = NULL) {
     // we include the file manually to prevent the drupal autoloading. which
     // uses DB calls
     require_once 'message_broker_exception.inc';

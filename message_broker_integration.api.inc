@@ -5,14 +5,15 @@
  * your callback. 
  * The given callback is called with two parameters: body and ack, a callable method you
  * use to ack the incoming message.
- * Optional, you can specify a invalidMessageHandler that reveives invalid messages.
- * @param string $selfName
+ * Optional, you can specify an invalidMessageHandler that reveives invalid messages.
+ *
+ * @param string $self_name
  * @return array 
  */
-function hook_message_broker_consumers($selfName) {
+function hook_message_broker_consumers($self_name) {
     $consumers = array();
     
-    $consumers['foo_consumer_' . $selfName] = array('queue' => 'foo' . $selfName, 
+    $consumers['foo_consumer_' . $self_name] = array('queue' => 'foo' . $self_name, 
         'callback' => 'mymodule_consume_message', 'invalidMessageHandler' => 'mymodule_log_invalid_message');
     
     return $consumers;
@@ -20,11 +21,12 @@ function hook_message_broker_consumers($selfName) {
 
 /**
  * Consumes one message.
+ *
  * @param mixed $message
  * @param callable $ack
  */
 function mymodule_consume_message($message, $ack) {
-    // process and ack message
+    // Process and ack message
     $ack();
 }
 
@@ -32,16 +34,18 @@ function mymodule_consume_message($message, $ack) {
  * Logs invalid messages to watchdog. This callback is executed whenever a consumer throws
  * an InvalidMessageException. The message broker module catches these exceptions, acks
  * the message and allows to handle the invalid data on your own.
+ *
  * @param mixed $msg
  */
 function mymodule_log_invalid_message($msg) {
-    // log message for instance to a file
+    // Log message for instance to a file
 }
 
 /**
  * Registers a message broker integration implementation. Describe the implementation via
  * a title, description and a factoryMethod. The latter one shall return an instance that implements the 
  * IMessageBroker interface.
+ *
  * @return array
  */
 function hook_message_broker_integration_implementation() {
@@ -55,9 +59,10 @@ function hook_message_broker_integration_implementation() {
 
 /**
  * Creates an instanceof the IMessageBroker.
+ *
  * @param array $consumers
- * @param string $selfName
+ * @param string $self_name
  */
-function mymodule_create_implementation($consumers, $selfName) {
+function mymodule_create_implementation($consumers, $self_name) {
     // return instanceof IMessageBroker
 }

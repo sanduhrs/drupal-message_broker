@@ -4,7 +4,7 @@
  * General exception which is thrown by the module in case something went wrong.
  */
 class MessageBrokerException extends Exception {
-    
+
 }
 
 /**
@@ -13,7 +13,7 @@ class MessageBrokerException extends Exception {
  * and call a invalidMessageHandler.
  */
 class InvalidMessageException extends Exception {
-    
+
 }
 
 
@@ -25,5 +25,5 @@ class InvalidMessageException extends Exception {
  * terminates the process, allowing you to restart the process.
  */
 class CriticalErrorException extends Exception {
-    
+
 }
