@@ -2,7 +2,6 @@ core = 7.x
 
 name = Message Broker Dummy Integration
 description = A message broker integration that consumes all messages synchronously
-version = "7.x-0.1"
 php = 5.3
 package = "Messagebroker"
 dependencies[] = message_broker_integration

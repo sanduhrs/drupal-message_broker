@@ -16,10 +16,10 @@ function message_broker_dummy_integration_message_broker_integration_implementat
 /**
  * Creates the dummy implementation.
  * @param array $consumers
- * @param string $selfName
+ * @param string $self_name
  * @return \DummyMessageBroker 
  */
-function _message_broker_dummy_integration_create_implementation($consumers, $selfName) {
+function _message_broker_dummy_integration_create_implementation($consumers, $self_name) {
     require_once 'dummy_message_broker.inc';
     
     $configPath = variable_get('message_broker_dummy_integration_config', '');

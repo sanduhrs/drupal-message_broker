@@ -44,7 +44,7 @@ class DummyMessageBroker implements \IMessageBroker {
             throw new MessageBrokerException('The specified exchange name is not known, check your json configuration file!');
         }
         
-        drupal_set_message('Message sent to exchange "' . $destination . '" with routing key "' . $options['routing_key'] . '"');
+        drupal_set_message(t('Message sent to exchange "@exchange" with routing key "@key"', array('@exchange' => $destination, '@key' => $options['routing_key'])));
         
         $queues = $this->getQueuesForMessage($options['routing_key'], $exchange['name'], $exchange['type']);
         
@@ -70,7 +70,7 @@ class DummyMessageBroker implements \IMessageBroker {
         $invalidMessage = FALSE;
         
         try {
-            drupal_set_message('Start consuming a message with "' . $consumerName . '"');
+            drupal_set_message(t('Start consuming a message with "@consumer"', array('@consumer' => $consumerName)));
             call_user_func($consumer['callback'], $message, function() use(&$acked) {
                 $acked = TRUE;
             });
@@ -93,9 +93,9 @@ class DummyMessageBroker implements \IMessageBroker {
         
         if (!$acked) {
             watchdog('dummy_message_broker', 'A message was not processed successfully, because it was not acked by the consumer "' . $consumerName . '"! Message: ' . $body);
-            drupal_set_message('A message was not processed successfully, it was not acked by the consumer "' . $consumerName . '"!', 'warning');
+            drupal_set_message(t('A message was not processed successfully, it was not acked by the consumer "@consumer"', array('@consumer' => $consumerName)), 'warning');
         } else if (!$invalidMessage) {
-            drupal_set_message('Message was processed successfully by consumer "' . $consumerName . '".');
+            drupal_set_message(t('Message was processed successfully by consumer "@consumer"', array('@consumer' => $consumerName)));
         }
     }
     
