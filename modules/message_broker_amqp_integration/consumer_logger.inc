@@ -5,18 +5,18 @@
  * message broker messages. 
  */
 interface IConsumerLogger {
-    
-	/**
-	 * Logs an info message.
-	 *
-	 * @param string $message
-	 */
-    function logInfo($message);
-    
-	/** 
-	 * Logs an error message.
-	 *
-	 * @param string $message
-	 */
-    function logError($message);
+
+  /**
+   * Logs an info message.
+   *
+   * @param string $message
+   */
+  function logInfo($message);
+
+  /**
+   * Logs an error message.
+   *
+   * @param string $message
+   */
+  function logError($message);
 }

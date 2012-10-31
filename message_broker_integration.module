@@ -9,7 +9,7 @@ require_once 'message_broker_integration.api.inc';
  * @return array
  */
 function _message_broker_integration_get_implementations() {
-    return module_invoke_all('message_broker_integration_implementation');
+  return module_invoke_all('message_broker_integration_implementation');
 }
 
 /**
@@ -17,7 +17,7 @@ function _message_broker_integration_get_implementations() {
  * @return array 
  */
 function _message_broker_integration_get_consumers() {
-    return module_invoke_all('message_broker_consumers', variable_get('message_broker_integration_self', ''));
+  return module_invoke_all('message_broker_consumers', variable_get('message_broker_integration_self', ''));
 }
 
 /**
@@ -26,26 +26,25 @@ function _message_broker_integration_get_consumers() {
  * @throws MessageBrokerException if no implementation is configured
  */
 function message_broker_integration_get() {
-    static $cachedImplementation = NULL;
-    
-    if ($cachedImplementation == NULL) {
-        $implementations = _message_broker_integration_get_implementations();
-        $implementationKey = variable_get('message_broker_integration_implementation', '');
-        
-        if (empty($implementationKey) || empty($implementations[$implementationKey])) {
-            throw new MessageBrokerException('No message broker integration implementation set!');
-        }
-        
-        $implementation = $implementations[$implementationKey];
-        $cachedImplementation = call_user_func($implementation['factoryMethod'], _message_broker_integration_get_consumers(), 
-            variable_get('message_broker_integration_self', ''));
-        
-        if (!$cachedImplementation instanceof IMessageBroker) {
-            throw new MessageBrokerException('Creating the message broker integration implementation failed!');
-        }
+  static $cachedImplementation = NULL;
+
+  if ($cachedImplementation == NULL) {
+    $implementations = _message_broker_integration_get_implementations();
+    $implementationKey = variable_get('message_broker_integration_implementation', '');
+
+    if (empty($implementationKey) || empty($implementations[$implementationKey])) {
+      throw new MessageBrokerException('No message broker integration implementation set!');
     }
-    
-    return $cachedImplementation;
+
+    $implementation = $implementations[$implementationKey];
+    $cachedImplementation = call_user_func($implementation['factoryMethod'], _message_broker_integration_get_consumers(), variable_get('message_broker_integration_self', ''));
+
+    if (!$cachedImplementation instanceof IMessageBroker) {
+      throw new MessageBrokerException('Creating the message broker integration implementation failed!');
+    }
+  }
+
+  return $cachedImplementation;
 }
 
 /**
@@ -53,18 +52,18 @@ function message_broker_integration_get() {
  * @return array 
  */
 function message_broker_integration_menu() {
-   $items = array();
+  $items = array();
 
-   $items['admin/config/system/message_broker_integration'] = array(
-        'title' => 'Message Broker Integration',
-        'description' => 'Configure the message broker integration',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('message_broker_integration_settings'),
-        'type' => MENU_NORMAL_ITEM,
-        'access arguments' => array('administer site configuration')
-    );
+  $items['admin/config/system/message_broker_integration'] = array(
+      'title' => 'Message Broker Integration',
+      'description' => 'Configure the message broker integration',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('message_broker_integration_settings'),
+      'type' => MENU_NORMAL_ITEM,
+      'access arguments' => array('administer site configuration')
+  );
 
-    return $items;
+  return $items;
 }
 
 /**
@@ -74,42 +73,42 @@ function message_broker_integration_menu() {
  * @return array 
  */
 function message_broker_integration_settings($form, &$form_state) {
-    $implementations = _message_broker_integration_get_implementations();
-    $options = array();
-    
-    foreach ($implementations as $key => $settings) {
-        $options[$key] = $settings['title'];
-        
-        if (!empty($settings['description'])) {
-            $options[$key] .= ' <i> - ' . $settings['description'] . '</i>';
-        }
+  $implementations = _message_broker_integration_get_implementations();
+  $options = array();
+
+  foreach ($implementations as $key => $settings) {
+    $options[$key] = $settings['title'];
+
+    if (!empty($settings['description'])) {
+      $options[$key] .= ' <i> - ' . $settings['description'] . '</i>';
     }
-    
-    $form['intro'] = array('#markup' => '<p>' . t('Choose the implementation you want to use for sending and receiving messages.<br />Visit the configuration page for the chosen implementation to see more options.') . '</p>');
-    
-    $form['message_broker_integration_implementation'] = array(
-        '#type' => 'radios',
-        '#options' => $options,
-        '#title' => t('Message broker integration implementation'),
-        '#default_value' => variable_get('message_broker_integration_implementation', '')
-    );
-    
-    $form['message_broker_integration_self'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Name of this drupal instance'),
-        '#description' => t('This value gets passed to the consumers hook, enabling modules to consume queues that contain this name.'),
-        '#default_value' => variable_get('message_broker_integration_self', ''),
-    );
-    
-    return system_settings_form($form);
+  }
+
+  $form['intro'] = array('#markup' => '<p>' . t('Choose the implementation you want to use for sending and receiving messages.<br />Visit the configuration page for the chosen implementation to see more options.') . '</p>');
+
+  $form['message_broker_integration_implementation'] = array(
+      '#type' => 'radios',
+      '#options' => $options,
+      '#title' => t('Message broker integration implementation'),
+      '#default_value' => variable_get('message_broker_integration_implementation', '')
+  );
+
+  $form['message_broker_integration_self'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Name of this drupal instance'),
+      '#description' => t('This value gets passed to the consumers hook, enabling modules to consume queues that contain this name.'),
+      '#default_value' => variable_get('message_broker_integration_self', ''),
+  );
+
+  return system_settings_form($form);
 }
 
 /**
  * Gets the self-name of this drupal instance.
  * @return string
  */
-function message_broker_integration_get_website_name(){
-    return variable_get('message_broker_integration_self', '');
+function message_broker_integration_get_website_name() {
+  return variable_get('message_broker_integration_self', '');
 }
 
 /**
@@ -120,9 +119,9 @@ function message_broker_integration_get_website_name(){
  * @return \CriticalErrorException
  */
 function message_broker_integration_throw_critical_error($message = NULL, $code = NULL, $previous = NULL) {
-    // we include the file manually to prevent the drupal autoloading. which
-    // uses DB calls
-    require_once 'message_broker_exception.inc';
-    
-    return new CriticalErrorException($message, $code, $previous);
+  // we include the file manually to prevent the drupal autoloading. which
+  // uses DB calls
+  require_once 'message_broker_exception.inc';
+
+  return new CriticalErrorException($message, $code, $previous);
 }

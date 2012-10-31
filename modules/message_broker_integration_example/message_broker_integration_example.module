@@ -4,18 +4,18 @@
  * Implements hook_menu, registers the hello world example.
  */
 function message_broker_integration_example_menu() {
-    $items = array();
+  $items = array();
 
-    $items['admin/config/system/message_broker_integration_example'] = array(
-        'title' => 'Message broker integration example',
-        'description' => 'A small hello world example that demonstrates the message broker integration',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('message_broker_integration_example_form'),
-        'type' => MENU_NORMAL_ITEM,
-        'access arguments' => array('administer site configuration')
-    );
+  $items['admin/config/system/message_broker_integration_example'] = array(
+      'title' => 'Message broker integration example',
+      'description' => 'A small hello world example that demonstrates the message broker integration',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('message_broker_integration_example_form'),
+      'type' => MENU_NORMAL_ITEM,
+      'access arguments' => array('administer site configuration')
+  );
 
-    return $items;
+  return $items;
 }
 
 /**
@@ -25,16 +25,16 @@ function message_broker_integration_example_menu() {
  * @return string 
  */
 function message_broker_integration_example_form($form, &$form_state) {
-    $form['title'] = array('#markup' => '<h2>Hello world example</h2>');
-    $form['intro'] = array('#markup' => '<p>This form lets you send a message to the exchange "helloWorld". The routing key will be "helloWorld.name_you_entered".');
-    $form['intro2'] = array('#markup' => '<p>The example declares two queues that are bound to this exchange. Enter any name to see the first consumer and "Drupal" to see the second one.');
-    $form['intro3'] = array('#markup' => '<p>You can trigger an InvalidMessageException if you enter "crash".');
-    
-    $form['name'] = array('#type' => 'textfield', '#required' => TRUE, '#title' => 'Say hello to');
+  $form['title'] = array('#markup' => '<h2>Hello world example</h2>');
+  $form['intro'] = array('#markup' => '<p>This form lets you send a message to the exchange "helloWorld". The routing key will be "helloWorld.name_you_entered".');
+  $form['intro2'] = array('#markup' => '<p>The example declares two queues that are bound to this exchange. Enter any name to see the first consumer and "Drupal" to see the second one.');
+  $form['intro3'] = array('#markup' => '<p>You can trigger an InvalidMessageException if you enter "crash".');
 
-    $form['submit'] = array('#type' => 'submit', '#value' => 'Send message');
-    
-    return $form;
+  $form['name'] = array('#type' => 'textfield', '#required' => TRUE, '#title' => 'Say hello to');
+
+  $form['submit'] = array('#type' => 'submit', '#value' => 'Send message');
+
+  return $form;
 }
 
 /**
@@ -43,11 +43,11 @@ function message_broker_integration_example_form($form, &$form_state) {
  * @param array $form_state 
  */
 function message_broker_integration_example_form_submit(&$form, &$form_state) {
-    $broker = message_broker_integration_get();
-    $message = new stdClass();
-    $message->name = $form_state['values']['name'];
-    
-    $broker->sendMessage(json_encode($message), 'helloWorld', array('routing_key' => 'helloWorld.' . $message->name));
+  $broker = message_broker_integration_get();
+  $message = new stdClass();
+  $message->name = $form_state['values']['name'];
+
+  $broker->sendMessage(json_encode($message), 'helloWorld', array('routing_key' => 'helloWorld.' . $message->name));
 }
 
 /**
@@ -56,36 +56,36 @@ function message_broker_integration_example_form_submit(&$form, &$form_state) {
  * @return string 
  */
 function message_broker_integration_example_message_broker_consumers($selfName) {
-    $consumers = array();
-    
-    // An example consumer implemented using a closure.
-    $consumers['helloWorldToEveryone'] = array('queue' => 'helloWorldForAll', 'callback' => function($message, \Closure $ack) {
+  $consumers = array();
+
+  // An example consumer implemented using a closure.
+  $consumers['helloWorldToEveryone'] = array('queue' => 'helloWorldForAll', 'callback' => function($message, \Closure $ack) {
         $message = json_decode($message->body);
-        
+
         if ($message->name == 'crash') {
-            throw new InvalidMessageException('Invalid name detected!');
+          throw new InvalidMessageException('Invalid name detected!');
         }
-        
+
         if (function_exists('drush_print')) {
-            drush_print('Hello world, ' . $message->name);
+          drush_print('Hello world, ' . $message->name);
         } else {
-            drupal_set_message('Hello world, ' . $message->name);
+          drupal_set_message('Hello world, ' . $message->name);
         }
-        
+
         $ack();
-    }, 'invalidMessageHandler' => function($message) {
+      }, 'invalidMessageHandler' => function($message) {
         if (function_exists('drush_print')) {
-            drush_print('Invalid message handler was executed.');
+          drush_print('Invalid message handler was executed.');
         } else {
-            drupal_set_message('Invalid message handler was executed.', 'warning');
+          drupal_set_message('Invalid message handler was executed.', 'warning');
         }
-    });
-    
-    // This consumer will only give a special hello to "Drupal", see the example_config.json to understand why
-    // (look at the routing keys)
-    $consumers['specialHelloWorld'] = array('queue' => 'helloWorldForDrupal', 'callback' => '_message_broker_integration_example_special_hello_world');
-    
-    return $consumers;
+      });
+
+  // This consumer will only give a special hello to "Drupal", see the example_config.json to understand why
+  // (look at the routing keys)
+  $consumers['specialHelloWorld'] = array('queue' => 'helloWorldForDrupal', 'callback' => '_message_broker_integration_example_special_hello_world');
+
+  return $consumers;
 }
 
 /**
@@ -94,13 +94,13 @@ function message_broker_integration_example_message_broker_consumers($selfName) 
  * @param \Closure $ack 
  */
 function _message_broker_integration_example_special_hello_world($message, \Closure $ack) {
-    $message = json_decode($message->body);
-    
-    if (function_exists('drush_print')) {
-        drush_print('A special hello to ' . $message->name . '!');
-    } else {
-        drupal_set_message('A special hello to ' . $message->name . '!');
-    }
+  $message = json_decode($message->body);
 
-    $ack();
+  if (function_exists('drush_print')) {
+    drush_print('A special hello to ' . $message->name . '!');
+  } else {
+    drupal_set_message('A special hello to ' . $message->name . '!');
+  }
+
+  $ack();
 }

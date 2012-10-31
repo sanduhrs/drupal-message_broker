@@ -5,12 +5,12 @@
  * other protocol.
  */
 interface IMessageBroker {
-    
-    /**
-     * Sends a message to the message broker. 
-     * @param string $body
-     * @param string $destination
-     * @param array $options
-     */
-    function sendMessage($body, $destination, array $options = array());
+
+  /**
+   * Sends a message to the message broker. 
+   * @param string $body
+   * @param string $destination
+   * @param array $options
+   */
+  function sendMessage($body, $destination, array $options = array());
 }

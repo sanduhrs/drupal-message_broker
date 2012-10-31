@@ -11,12 +11,12 @@
  * @return array 
  */
 function hook_message_broker_consumers($self_name) {
-    $consumers = array();
-    
-    $consumers['foo_consumer_' . $self_name] = array('queue' => 'foo' . $self_name, 
-        'callback' => 'mymodule_consume_message', 'invalidMessageHandler' => 'mymodule_log_invalid_message');
-    
-    return $consumers;
+  $consumers = array();
+
+  $consumers['foo_consumer_' . $self_name] = array('queue' => 'foo' . $self_name,
+      'callback' => 'mymodule_consume_message', 'invalidMessageHandler' => 'mymodule_log_invalid_message');
+
+  return $consumers;
 }
 
 /**
@@ -26,8 +26,8 @@ function hook_message_broker_consumers($self_name) {
  * @param callable $ack
  */
 function mymodule_consume_message($message, $ack) {
-    // Process and ack message
-    $ack();
+  // Process and ack message
+  $ack();
 }
 
 /**
@@ -38,7 +38,7 @@ function mymodule_consume_message($message, $ack) {
  * @param mixed $msg
  */
 function mymodule_log_invalid_message($msg) {
-    // Log message for instance to a file
+  // Log message for instance to a file
 }
 
 /**
@@ -49,12 +49,12 @@ function mymodule_log_invalid_message($msg) {
  * @return array
  */
 function hook_message_broker_integration_implementation() {
-    $implementations = array();
-    
-    $implementations['foo'] = array('title' => t('Foo'), 'factoryMethod' => 'mymodule_create_implementation', 
-        'description' => t('A message broker implementation'));
-    
-    return $implementations;
+  $implementations = array();
+
+  $implementations['foo'] = array('title' => t('Foo'), 'factoryMethod' => 'mymodule_create_implementation',
+      'description' => t('A message broker implementation'));
+
+  return $implementations;
 }
 
 /**
@@ -64,5 +64,5 @@ function hook_message_broker_integration_implementation() {
  * @param string $self_name
  */
 function mymodule_create_implementation($consumers, $self_name) {
-    // return instanceof IMessageBroker
+  // return instanceof IMessageBroker
 }
