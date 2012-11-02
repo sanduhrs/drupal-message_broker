@@ -13,6 +13,6 @@ Features
 - eventually you will need an AMQP compliant message broker
 
 -- DOCUMENTATION --
-Please have a look at http://drupal.org/node/1803342.
+Please have a look at http://drupal.org/node/1828146 for an extensive documentation.
  
 This project has been sponsored by sirup° Agentur für Neue Medien - http://www.sirup.com
