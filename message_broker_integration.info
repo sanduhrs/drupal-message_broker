@@ -2,7 +2,6 @@ core = 7.x
 
 name = Message Broker Integration
 description = Integrates a message broker into drupal, enables modules to work easily with it
-version = 7.x 1.0
 php = 5.3
 package = "Messagebroker"
 configure = admin/config/system/message_broker_integration
