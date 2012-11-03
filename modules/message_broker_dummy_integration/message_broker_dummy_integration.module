@@ -15,6 +15,7 @@ function message_broker_dummy_integration_message_broker_integration_implementat
 
 /**
  * Creates the dummy implementation.
+ *
  * @param array $consumers
  * @param string $self_name
  * @return \DummyMessageBroker 
@@ -22,19 +23,19 @@ function message_broker_dummy_integration_message_broker_integration_implementat
 function _message_broker_dummy_integration_create_implementation($consumers, $self_name) {
   require_once 'dummy_message_broker.inc';
 
-  $configPath = variable_get('message_broker_dummy_integration_config', '');
+  $config_path = variable_get('message_broker_dummy_integration_config', '');
 
-  if (empty($configPath)) {
+  if (empty($config_path)) {
     throw new MessageBrokerException('No json configuration path set!');
   }
 
-  $configFile = file_get_contents($configPath);
+  $config_file = file_get_contents($config_path);
 
-  if ($configFile === FALSE) {
+  if ($config_file === FALSE) {
     throw new MessageBrokerException('The json configuration file was not read successfully!');
   }
 
-  $config = json_decode($configFile, TRUE);
+  $config = json_decode($config_file, TRUE);
 
   if ($config === NULL) {
     throw new MessageBrokerException('The json configuration was not parsed successfully!');
@@ -44,7 +45,7 @@ function _message_broker_dummy_integration_create_implementation($consumers, $se
 }
 
 /**
- * Implements hook_menu.
+ * Implements hook_menu().
  */
 function message_broker_dummy_integration_menu() {
   $items = array();
@@ -63,6 +64,7 @@ function message_broker_dummy_integration_menu() {
 
 /**
  * Settings form for the dummy configuration.
+ *
  * @param array $form
  * @param array $form_state
  * @return array 
@@ -81,6 +83,7 @@ function message_broker_dummy_integration_settings($form, &$form_state) {
 
 /**
  * Validates the settings.
+ *
  * @param type $form
  * @param type $form_state
  */
@@ -91,8 +94,8 @@ function message_broker_dummy_integration_settings_validate($form, &$form_state)
       return;
     }
 
-    $configFile = file_get_contents($form_state['values']['message_broker_dummy_integration_config']);
-    $config = json_decode($configFile, TRUE);
+    $config_file = file_get_contents($form_state['values']['message_broker_dummy_integration_config']);
+    $config = json_decode($config_file, TRUE);
 
     if ($config === NULL) {
       form_set_error('message_broker_dummy_integration_config', 'The JSON file was not parsed successfully.');

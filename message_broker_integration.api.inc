@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * API documentation for the message broker module.
+ */
+
+/**
  * Registers consumers in the message broker. Specify the queue you want to consume and
  * your callback. 
  * The given callback is called with two parameters: body and ack, a callable method you
@@ -8,7 +13,7 @@
  * Optional, you can specify an invalidMessageHandler that reveives invalid messages.
  *
  * @param string $self_name
- * @return array 
+ * @return array consumers
  */
 function hook_message_broker_consumers($self_name) {
   $consumers = array();

@@ -6,6 +6,7 @@ require_once 'message_broker_integration.api.inc';
 
 /**
  * Returns all known message broker integration implementatinons.
+ *
  * @return array
  */
 function _message_broker_integration_get_implementations() {
@@ -14,7 +15,8 @@ function _message_broker_integration_get_implementations() {
 
 /**
  * Returns all consumers.
- * @return array 
+ *
+ * @return array consumers
  */
 function _message_broker_integration_get_consumers() {
   return module_invoke_all('message_broker_consumers', variable_get('message_broker_integration_self', ''));
@@ -22,33 +24,35 @@ function _message_broker_integration_get_consumers() {
 
 /**
  * Returns the implementation of the message broker integration.
+ *
  * @return IMessageBroker 
  * @throws MessageBrokerException if no implementation is configured
  */
 function message_broker_integration_get() {
-  static $cachedImplementation = NULL;
+  static $cached_implementation = NULL;
 
-  if ($cachedImplementation == NULL) {
+  if ($cached_implementation == NULL) {
     $implementations = _message_broker_integration_get_implementations();
-    $implementationKey = variable_get('message_broker_integration_implementation', '');
+    $implementation_key = variable_get('message_broker_integration_implementation', '');
 
-    if (empty($implementationKey) || empty($implementations[$implementationKey])) {
+    if (empty($implementation_key) || empty($implementations[$implementation_key])) {
       throw new MessageBrokerException('No message broker integration implementation set!');
     }
 
-    $implementation = $implementations[$implementationKey];
-    $cachedImplementation = call_user_func($implementation['factoryMethod'], _message_broker_integration_get_consumers(), variable_get('message_broker_integration_self', ''));
+    $implementation = $implementations[$implementation_key];
+    $cached_implementation = call_user_func($implementation['factoryMethod'], _message_broker_integration_get_consumers(), variable_get('message_broker_integration_self', ''));
 
-    if (!$cachedImplementation instanceof IMessageBroker) {
+    if (!$cached_implementation instanceof IMessageBroker) {
       throw new MessageBrokerException('Creating the message broker integration implementation failed!');
     }
   }
 
-  return $cachedImplementation;
+  return $cached_implementation;
 }
 
 /**
- * Implements hook_menu.
+ * Implements hook_menu().
+ *
  * @return array 
  */
 function message_broker_integration_menu() {
@@ -68,6 +72,7 @@ function message_broker_integration_menu() {
 
 /**
  * Settings form for the message broker integration.
+ *
  * @param array $form
  * @param array $form_state
  * @return array 
@@ -105,6 +110,7 @@ function message_broker_integration_settings($form, &$form_state) {
 
 /**
  * Gets the self-name of this drupal instance.
+ *
  * @return string
  */
 function message_broker_integration_get_website_name() {
@@ -112,7 +118,8 @@ function message_broker_integration_get_website_name() {
 }
 
 /**
- * Throw a critical error exception.
+ * Creates a critical error exception.
+ *
  * @param string $message
  * @param string $code
  * @param mixed $previous

@@ -39,19 +39,19 @@ function _message_broker_amqp_collect_params() {
   $params['password'] = variable_get('message_broker_amqp_integration_password', 'guest');
   $params['vhost'] = variable_get('message_broker_amqp_integration_vhost', "/");
 
-  $configPath = variable_get('message_broker_amqp_integration_config', '');
+  $config_path = variable_get('message_broker_amqp_integration_config', '');
 
-  if (empty($configPath)) {
+  if (empty($config_path)) {
     throw new MessageBrokerException('No json configuration path set!');
   }
 
-  $configFile = file_get_contents($configPath);
+  $config_file = file_get_contents($config_path);
 
-  if ($configFile === FALSE) {
+  if ($config_file === FALSE) {
     throw new MessageBrokerException('The json configuration file was not read successfully!');
   }
 
-  $config = json_decode($configFile, TRUE);
+  $config = json_decode($config_file, TRUE);
 
   if ($config === NULL) {
     throw new MessageBrokerException('The json configuration was not parsed successfully!');
@@ -64,11 +64,12 @@ function _message_broker_amqp_collect_params() {
 
 /**
  * Creates the AMQP implementation.
+ *
  * @param array $consumers
- * @param string $selfName
+ * @param string $self_name
  * @return \AmqpMessageBroker 
  */
-function _message_broker_amqp_integration_create_implementation($consumers, $selfName) {
+function _message_broker_amqp_integration_create_implementation($consumers, $self_name) {
   _message_broker_amqp_integration_setup_autoload();
   $params = _message_broker_amqp_collect_params();
 
@@ -78,7 +79,7 @@ function _message_broker_amqp_integration_create_implementation($consumers, $sel
 }
 
 /**
- * Implements hook_menu.
+ * Implements hook_menu().
  */
 function message_broker_amqp_integration_menu() {
   $items = array();
@@ -97,6 +98,7 @@ function message_broker_amqp_integration_menu() {
 
 /**
  * Settings form for the amqp configuration.
+ *
  * @param array $form
  * @param array $form_state
  * @return array 
@@ -147,6 +149,7 @@ function message_broker_amqp_integration_settings($form, &$form_state) {
 
 /**
  * Validates the configuration form.
+ *
  * @param array $form
  * @param array $form_state
  */
@@ -157,8 +160,8 @@ function message_broker_amqp_integration_settings_validate($form, &$form_state) 
       return;
     }
 
-    $configFile = file_get_contents($form_state['values']['message_broker_amqp_integration_config']);
-    $config = json_decode($configFile, TRUE);
+    $config_file = file_get_contents($form_state['values']['message_broker_amqp_integration_config']);
+    $config = json_decode($config_file, TRUE);
 
     if ($config === NULL) {
       form_set_error('message_broker_amqp_integration_config', 'The JSON file was not parsed successfully.');

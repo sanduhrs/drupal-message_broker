@@ -1,13 +1,19 @@
 <?php
 
 /**
+ * @file
+ * Definition of generic message broker interface.
+ */
+
+/**
  * Represents the message broker, that may be implemented via AQMP or any 
  * other protocol.
  */
 interface IMessageBroker {
 
   /**
-   * Sends a message to the message broker. 
+   * Sends a message to the message broker.
+   *
    * @param string $body
    * @param string $destination
    * @param array $options

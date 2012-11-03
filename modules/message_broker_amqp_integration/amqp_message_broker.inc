@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Message broker integration implementation that uses AMQP.
+*/
+
+/**
  * Implementation of the IMessagebroker interface to integrate
  * an external AMQP message broker.
  */
@@ -130,7 +135,8 @@ class AmqpMessageBroker implements \IMessageBroker {
     }
 
     if (!isset($options['delivery_mode'])) {
-      $options['delivery_mode'] = 2; // durable message
+	  // durable message is default
+      $options['delivery_mode'] = 2;
     }
 
     return $options;
@@ -153,18 +159,18 @@ class AmqpMessageBroker implements \IMessageBroker {
       throw new InvalidArgumentException('The message body must be a string! Serialize your data to json, xml or anything you prefer.');
     }
 
-    $routingKey = "";
+    $routing_key = "";
 
     if (isset($options['routing_key'])) {
-      $routingKey = $options['routing_key'];
+      $routing_key = $options['routing_key'];
       unset($options['routing_key']);
     }
 
-    $msgOptions = $this->getMessageParams($options);
+    $msg_options = $this->getMessageParams($options);
 
-    $msg = new \PhpAmqpLib\Message\AMQPMessage($body, $msgOptions);
+    $msg = new \PhpAmqpLib\Message\AMQPMessage($body, $msg_options);
 
-    $this->channel->basic_publish($msg, $destination, $routingKey);
+    $this->channel->basic_publish($msg, $destination, $routing_key);
   }
 
   /**

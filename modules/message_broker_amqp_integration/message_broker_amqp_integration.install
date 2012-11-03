@@ -14,6 +14,9 @@ function message_broker_amqp_integration_uninstall() {
 
 /**
  * Implements hook_requirements() and searches for the required PHP Amqp library.
+ *
+ * @param string $phase
+ * @return array
  */
 function message_broker_amqp_integration_requirements($phase) {
   $requirements = array();
@@ -24,10 +27,10 @@ function message_broker_amqp_integration_requirements($phase) {
     $requirements['phpamqp_library']['description'] = $t('The library needed to connect to an AMQP complaint message broker server.');
 
     if (function_exists('libraries_get_libraries')) {
-      $installedLibraries = libraries_get_libraries();
-      $libPath = libraries_get_path('phpamqp') . DIRECTORY_SEPARATOR . 'PhpAmqpLib';
+      $installed_libraries = libraries_get_libraries();
+      $lib_path = libraries_get_path('phpamqp') . DIRECTORY_SEPARATOR . 'PhpAmqpLib';
 
-      if (isset($installedLibraries['phpamqp']) && file_exists($libPath)) {
+      if (isset($installed_libraries['phpamqp']) && file_exists($lib_path)) {
         $requirements['phpamqp_library']['value'] = $t('Installed');
         $requirements['phpamqp_library']['severity'] = REQUIREMENT_OK;
       } else {

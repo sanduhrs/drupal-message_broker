@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implements hook_menu, registers the hello world example.
+ * Implements hook_menu(), registers the hello world example.
  */
 function message_broker_integration_example_menu() {
   $items = array();
@@ -20,6 +20,7 @@ function message_broker_integration_example_menu() {
 
 /**
  * Form for the hello world example.
+ *
  * @param type $form
  * @param type $form_state
  * @return string 
@@ -39,6 +40,7 @@ function message_broker_integration_example_form($form, &$form_state) {
 
 /**
  * Submit function for the hello world example, that sends a valid or invalid message.
+ *
  * @param array $form
  * @param array $form_state 
  */
@@ -51,11 +53,12 @@ function message_broker_integration_example_form_submit(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_message_broker_consumers.
- * @param string $selfName name of this drupal instance
+ * Implements hook_message_broker_consumers().
+ *
+ * @param string $self_name name of this drupal instance
  * @return string 
  */
-function message_broker_integration_example_message_broker_consumers($selfName) {
+function message_broker_integration_example_message_broker_consumers($self_name) {
   $consumers = array();
 
   // An example consumer implemented using a closure.
@@ -90,6 +93,7 @@ function message_broker_integration_example_message_broker_consumers($selfName) 
 
 /**
  * An example consumer that outputs a special hello.
+ *
  * @param stdClass $message
  * @param \Closure $ack 
  */
