@@ -17,10 +17,10 @@ function message_broker_amqp_integration_drush_command() {
   $items['consume-amqp-messages'] = array(
     'description' => 'Consumes AMQP messages using all or a specific consumer',
     'arguments' => array(
-      'consumer' => 'The consumer to start, if not specified, the command will start all consumers'
+      'consumer' => 'The consumer to start, if not specified, the command will start all consumers',
     ),
     'options' => array(
-      'count-messages' => 'Consume the given count of messages, blocks until finished'
+      'count-messages' => 'Consume the given count of messages, blocks until finished',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_FULL,
     'aliases' => array('cons'),
@@ -39,7 +39,8 @@ function message_broker_amqp_integration_drush_command() {
  * @param string $consumer_name
  *   Name of consumer.
  *
- * @return boolean 
+ * @return boolean
+ *   TRUE if command succeeded.
  */
 function drush_message_broker_amqp_integration_consume_amqp_messages($consumer_name = '') {
   try {

@@ -16,9 +16,9 @@
  *
  * @param string $self_name
  *   Name of this drupal instance.
+ *
  * @return array
  *   Consumers to register.
- * 
  */
 function hook_message_broker_consumers($self_name) {
   $consumers = array();
@@ -68,7 +68,6 @@ function mymodule_log_invalid_message($message) {
  *
  * @return array
  *   Implementations.
- * 
  */
 function hook_message_broker_integration_implementation() {
   $implementations = array();

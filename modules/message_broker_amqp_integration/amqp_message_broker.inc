@@ -23,12 +23,14 @@ class AmqpMessageBroker implements \IMessageBroker {
   protected $consumers;
 
   /**
-   * Creates an AmqpMessageBroker instance. Specify an array with infos
-   * about host, vhost and the credentials:
+   * Creates an AmqpMessageBroker instance.
+   * 
+   * Specify an array with infos about host, vhost and the credentials:
    * array('host' => 'localhost', 'port' => 80, 'vhost' => '/', 
    *       'username' => '?', 'password' => '?')
    *
    * @param array $params
+   *   Parameters.
    * @param array $consumers
    *   Consumers.
    */
@@ -151,8 +153,8 @@ class AmqpMessageBroker implements \IMessageBroker {
       $options['content_type'] = 'text/plain';
     }
 
+    // Durable messages are the default.
     if (!isset($options['delivery_mode'])) {
-	  // durable message is default
       $options['delivery_mode'] = 2;
     }
 
@@ -214,7 +216,7 @@ class AmqpMessageBroker implements \IMessageBroker {
    *
    * @param string $consumer_name
    *   Name of the consumer.
-   * @param int count_messages_to_process
+   * @param int $count_messages_to_process
    *   Count of messages to consume.
    * @param IConsumerLogger $logger
    *   The logger to use.
@@ -230,7 +232,7 @@ class AmqpMessageBroker implements \IMessageBroker {
       if ($this->consumerExists($consumer_name)) {
         $consumers[$consumer_name] = $this->consumers[$consumer_name];
       } else {
-        return $logger->logError('The consumer "' . $consumer_name . 
+        return $logger->logError('The consumer "' . $consumer_name .
                 '" does not exist!');
       }
     } else {
@@ -246,8 +248,8 @@ class AmqpMessageBroker implements \IMessageBroker {
     foreach ($consumers as $name => $consumer_infos) {
       $that = $this;
       $this->channel->basic_consume($consumer_infos['queue'], $name, FALSE, 
-              FALSE, FALSE, FALSE, function($message) use($consumer_infos, 
-              $logger, $name, &$count_messages, $that) {
+          FALSE, FALSE, FALSE, function($message) use($consumer_infos, 
+          $logger, $name, &$count_messages, $that) {
         $logger->logInfo('Process message with consumer "' . $name . '"');
         $acked = FALSE;
 

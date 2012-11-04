@@ -18,6 +18,7 @@ function message_broker_integration_uninstall() {
  */
 function message_broker_integration_enable() {
   drupal_set_message(t('See the configuration page !url for the message broker integration to get started.',
-    array('!url' => l('admin/config/system/message_broker_integration', 
+    array(
+        '!url' => l('admin/config/system/message_broker_integration',
                       'admin/config/system/message_broker_integration'))));
 }

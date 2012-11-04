@@ -9,8 +9,7 @@
  * Returns all known message broker integration implementatinons.
  *
  * @return array
- *  Infos about message broker implementations collected via the hook.
- *
+ *    Infos about message broker implementations collected via the hook.
  */
 function _message_broker_integration_get_implementations() {
   return module_invoke_all('message_broker_integration_implementation');
@@ -104,7 +103,7 @@ function message_broker_integration_settings($form, &$form_state) {
   }
 
   $form['intro'] = array(
-      '#markup' => '<p>' . t('Choose the implementation you
+    '#markup' => '<p>' . t('Choose the implementation you
       want to use for sending and receiving messages.<br />Visit the configuration
       page for the chosen implementation to see more options.') . '</p>');
 

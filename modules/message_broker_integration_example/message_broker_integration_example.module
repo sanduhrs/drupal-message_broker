@@ -12,7 +12,7 @@ function message_broker_integration_example_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('message_broker_integration_example_form'),
     'type' => MENU_NORMAL_ITEM,
-    'access arguments' => array('administer site configuration')
+    'access arguments' => array('administer site configuration'),
   );
 
   return $items;
@@ -21,9 +21,13 @@ function message_broker_integration_example_menu() {
 /**
  * Form for the hello world example.
  *
- * @param type $form
- * @param type $form_state
- * @return string 
+ * @param array $form
+ *   Form.
+ * @param array $form_state
+ *   Form state.
+ *
+ * @return array
+ *   Example form.
  */
 function message_broker_integration_example_form($form, &$form_state) {
   $form['title'] = array('#markup' => '<h2>Hello world example</h2>');
@@ -39,11 +43,14 @@ function message_broker_integration_example_form($form, &$form_state) {
 }
 
 /**
- * Submit function for the hello world example, that sends a valid or
- * invalid message.
+ * Submit function for the hello world example.
+ * 
+ * Sends valid and invalid messages.
  *
  * @param array $form
- * @param array $form_state 
+ *   Form.
+ * @param array $form_state
+ *   Form state.
  */
 function message_broker_integration_example_form_submit(&$form, &$form_state) {
   $broker = message_broker_integration_get();
@@ -59,14 +66,16 @@ function message_broker_integration_example_form_submit(&$form, &$form_state) {
  *
  * @param string $self_name
  *   Name of this drupal instance.
- * @return array 
+ *
+ * @return array
+ *   Example consumers.
  */
 function message_broker_integration_example_message_broker_consumers($self_name) {
   $consumers = array();
 
   // An example consumer implemented using a closure.
   $consumers['helloWorldToEveryone'] = array(
-    'queue' => 'helloWorldForAll', 
+    'queue' => 'helloWorldForAll',
     'callback' => function($message, \Closure $ack) {
       $message = json_decode($message->body);
 
@@ -92,7 +101,7 @@ function message_broker_integration_example_message_broker_consumers($self_name)
   // This consumer will only give a special hello to "Drupal", see the
   // example_config.json to understand why (look at the routing keys).
   $consumers['specialHelloWorld'] = array(
-    'queue' => 'helloWorldForDrupal', 
+    'queue' => 'helloWorldForDrupal',
     'callback' => '_message_broker_integration_example_special_hello_world');
 
   return $consumers;
@@ -102,9 +111,11 @@ function message_broker_integration_example_message_broker_consumers($self_name)
  * An example consumer that outputs a special hello.
  *
  * @param stdClass $message
- * @param \Closure $ack 
+ *   Message to consume.
+ * @param \Closure $ack
+ *   Ack method.
  */
-function _message_broker_integration_example_special_hello_world($message, 
+function _message_broker_integration_example_special_hello_world($message,
         \Closure $ack) {
   $message = json_decode($message->body);
 
