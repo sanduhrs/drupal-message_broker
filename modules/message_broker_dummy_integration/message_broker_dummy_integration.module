@@ -8,8 +8,8 @@ function message_broker_dummy_integration_message_broker_integration_implementat
     'dummy' => array(
     'title' => t('Dummy'),
     'description' => t('A (partial) dummy implementation of the AMQP protocol that executes everything synchronously within the same request.'),
-    'factoryMethod' => '_message_broker_dummy_integration_create_implementation'
-    )
+    'factoryMethod' => '_message_broker_dummy_integration_create_implementation',
+    ),
   );
 }
 
@@ -80,8 +80,7 @@ function message_broker_dummy_integration_menu() {
  */
 function message_broker_dummy_integration_settings($form, &$form_state) {
   $form['intro'] = array(
-    '#markup' => '<p>' . t('Specify the path to the ' .
-          'message broker configuration file which contains the definitions ' .
+    '#markup' => '<p>' . t('Specify the path to the message broker configuration file which contains the definitions ' .
           'for all exchanges and queues.') . '</p>');
 
   $form['message_broker_dummy_integration_config'] = array(
@@ -99,7 +98,7 @@ function message_broker_dummy_integration_settings($form, &$form_state) {
  * @param array $form
  *   Form.
  * @param array $form_state
- *    Form state.
+ *   Form state.
  */
 function message_broker_dummy_integration_settings_validate($form, &$form_state) {
   if (!empty($form_state['values']['message_broker_dummy_integration_config'])) {

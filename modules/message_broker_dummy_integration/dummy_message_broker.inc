@@ -106,7 +106,7 @@ class DummyMessageBroker implements \IMessageBroker {
               array('@consumer' => $queue_name)));
       call_user_func($consumer['callback'], $message, function() use(&$acked) {
                 $acked = TRUE;
-              });
+      });
     } catch (InvalidMessageException $e) {
       if (!$acked) {
         $acked = TRUE;
@@ -130,7 +130,7 @@ class DummyMessageBroker implements \IMessageBroker {
       watchdog('dummy_message_broker', 'A message was not processed successfully, because it was not acked by the consumer "' . $queue_name . '"! Message: ' . $body);
       drupal_set_message(t('A message was not processed successfully, it was not acked by the consumer "@consumer"', array('@consumer' => $queue_name)), 'warning');
     }
-    else if (!$invalid_message) {
+    elseif (!$invalid_message) {
       drupal_set_message(t('Message was processed successfully by consumer "@consumer"', array('@consumer' => $queue_name)));
     }
   }
@@ -180,8 +180,8 @@ class DummyMessageBroker implements \IMessageBroker {
   }
 
   /**
-   * Finds all queues that are bound to the specified exchange and message
-   * routing key.
+   * 
+   * Finds all queues that are routed to the specified exchange.
    *
    * @param string $routing_key
    *   Routing key.
