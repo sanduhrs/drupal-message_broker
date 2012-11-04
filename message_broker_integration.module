@@ -9,6 +9,8 @@
  * Returns all known message broker integration implementatinons.
  *
  * @return array
+ *  Infos about message broker implementations collected via the hook.
+ *
  */
 function _message_broker_integration_get_implementations() {
   return module_invoke_all('message_broker_integration_implementation');
@@ -18,6 +20,7 @@ function _message_broker_integration_get_implementations() {
  * Returns all consumers.
  *
  * @return array
+ *  All registered consumers.
  */
 function _message_broker_integration_get_consumers() {
   return module_invoke_all('message_broker_consumers',
@@ -28,6 +31,7 @@ function _message_broker_integration_get_consumers() {
  * Returns the implementation of the message broker integration.
  *
  * @return IMessageBroker
+ *   The message broker implementation.
  * @throws MessageBrokerException
  *   If no implementation is configured
  */
@@ -80,7 +84,10 @@ function message_broker_integration_menu() {
  * Settings form for the message broker integration.
  *
  * @param array $form
+ *   Form.
  * @param array $form_state
+ *   Form state.
+ *
  * @return array
  *   Settings form.
  */
@@ -96,9 +103,10 @@ function message_broker_integration_settings($form, &$form_state) {
     }
   }
 
-  $form['intro'] = array('#markup' => '<p>' . t('Choose the implementation you
-    want to use for sending and receiving messages.<br />Visit the configuration
-    page for the chosen implementation to see more options.') . '</p>');
+  $form['intro'] = array(
+      '#markup' => '<p>' . t('Choose the implementation you
+      want to use for sending and receiving messages.<br />Visit the configuration
+      page for the chosen implementation to see more options.') . '</p>');
 
   $form['message_broker_integration_implementation'] = array(
     '#type' => 'radios',

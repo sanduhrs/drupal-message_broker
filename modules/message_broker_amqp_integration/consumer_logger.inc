@@ -15,6 +15,7 @@ interface IConsumerLogger {
    * Logs an info message.
    *
    * @param string $message
+   *   Message to log.
    */
   public function logInfo($message);
 
@@ -22,6 +23,7 @@ interface IConsumerLogger {
    * Logs an error message.
    *
    * @param string $message
+   *   Message to log.
    */
   public function logError($message);
 }

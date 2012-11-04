@@ -6,8 +6,8 @@
  */
 
 /**
- * Registers consumers in the message broker. 
- * 
+ * Registers consumers in the message broker.
+ *
  * Specify the queues you want to consume and your callback.
  * The given callback is called with two parameters: body and ack, a callable
  * method you use to ack the incoming message.
@@ -18,6 +18,7 @@
  *   Name of this drupal instance.
  * @return array
  *   Consumers to register.
+ * 
  */
 function hook_message_broker_consumers($self_name) {
   $consumers = array();
@@ -39,40 +40,42 @@ function hook_message_broker_consumers($self_name) {
  *   Call this method for acking the message.
  */
 function mymodule_consume_message($message, $ack) {
-  // Process and ack message
+  // Process and ack message.
   $ack();
 }
 
 /**
  * Invalid message callback function.
- * 
+ *
  * This callback is executed whenever a consumer throws an
  * InvalidMessageException. The message broker module catches
  * these exceptions, acks the message and allows to handle the invalid data on
  * your own.
  *
- * @param mixed $messag
+ * @param mixed $message
  *   Invalid message.
  */
 function mymodule_log_invalid_message($message) {
-  // Log message for instance to a file
+  // Log message for instance to a file.
 }
 
 /**
- * Registers a message broker integration implementation. 
- * 
- * Describe the implementation via a title, description and a factoryMethod. 
+ * Registers a message broker integration implementation.
+ *
+ * Describe the implementation via a title, description and a factoryMethod.
  * The latter one shall return an instance that implements the IMessageBroker
  * interface.
  *
  * @return array
+ *   Implementations.
+ * 
  */
 function hook_message_broker_integration_implementation() {
   $implementations = array();
 
   $implementations['foo'] = array(
-      'title' => t('Foo'), 'factoryMethod' => 'mymodule_create_implementation',
-      'description' => t('A message broker implementation'));
+    'title' => t('Foo'), 'factoryMethod' => 'mymodule_create_implementation',
+    'description' => t('A message broker implementation'));
 
   return $implementations;
 }
@@ -86,5 +89,5 @@ function hook_message_broker_integration_implementation() {
  *   Name of this drupal instance.
  */
 function mymodule_create_implementation($consumers, $self_name) {
-  // return instanceof IMessageBroker
+  // Return instance of IMessageBroker.
 }
