@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Dummy implementation of IMessageBroker.
+ */
+
+/**
  * Dummy implementation of the IMessageBroker interface.
  */
 class DummyMessageBroker implements \IMessageBroker {
@@ -34,18 +39,22 @@ class DummyMessageBroker implements \IMessageBroker {
    */
   public function sendMessage($body, $destination, array $options = array()) {
     if (!is_string($body)) {
-      throw new InvalidArgumentException('The message body must be a string! Serialize your data to json, xml or anything you prefer.');
+      throw new InvalidArgumentException('The message body must be a string! ' .
+              'Serialize your data to json, xml or anything you prefer.');
     }
 
     $exchange = $this->findExchangeByName($destination);
 
     if ($exchange === FALSE) {
-      throw new MessageBrokerException('The specified exchange name is not known, check your json configuration file!');
+      throw new MessageBrokerException('The specified exchange name is not known' .
+              ', check your json configuration file!');
     }
 
-    drupal_set_message(t('Message sent to exchange "@exchange" with routing key "@key"', array('@exchange' => $destination, '@key' => $options['routing_key'])));
+    drupal_set_message(t('Message sent to exchange "@exchange" with routing key "@key"',
+            array('@exchange' => $destination, '@key' => $options['routing_key'])));
 
-    $queues = $this->getQueuesForMessage($options['routing_key'], $exchange['name'], $exchange['type']);
+    $queues = $this->getQueuesForMessage($options['routing_key'], 
+            $exchange['name'], $exchange['type']);
 
     foreach ($queues as $queue_name) {
       foreach ($this->consumers as $consumer_name => $consumer) {
@@ -70,7 +79,8 @@ class DummyMessageBroker implements \IMessageBroker {
     $invalidMessage = FALSE;
 
     try {
-      drupal_set_message(t('Start consuming a message with "@consumer"', array('@consumer' => $queue_name)));
+      drupal_set_message(t('Start consuming a message with "@consumer"', 
+              array('@consumer' => $queue_name)));
       call_user_func($consumer['callback'], $message, function() use(&$acked) {
                 $acked = TRUE;
               });
@@ -78,7 +88,8 @@ class DummyMessageBroker implements \IMessageBroker {
       if (!$acked) {
         $acked = TRUE;
         watchdog_exception('dummy_message_broker', $e);
-        watchdog('dummy_message_broker', 'Invalid message catched, body: ' . $body);
+        watchdog('dummy_message_broker', 'Invalid message catched, body: ' . 
+                $body);
       }
 
       $invalidMessage = TRUE;
@@ -87,7 +98,8 @@ class DummyMessageBroker implements \IMessageBroker {
         call_user_func($consumer['invalidMessageHandler'], $message);
       }
     } catch (Exception $e) {
-      watchdog(WATCHDOG_ERROR, 'An exception was raised while consuming a message by the "' . $queue_name . '". Message: ' . $body);
+      watchdog(WATCHDOG_ERROR, 'An exception was raised while consuming a ' .
+              'message by the "' . $queue_name . '". Message: ' . $body);
       watchdog_exception('dummy_message_broker', $e);
     }
 
@@ -123,8 +135,9 @@ class DummyMessageBroker implements \IMessageBroker {
     foreach ($pattern_elements as $pos => $pattern) {
       if ($pattern == '#') {
         if ($pos == count($pattern_elements) - 1) {
-          // we allow the hash at the end, other positions are not supported at the moment
-          $matches = $matches && TRUE; // the hash stands for anything
+          // We allow the hash at the end, other positions are not supported
+          // at the moment.
+          $matches = $matches && TRUE;
           break;
         } else {
           throw new MessageBrokerException('Pattern matching with "#" hashes within the pattern is not implemented yet!');
@@ -138,31 +151,36 @@ class DummyMessageBroker implements \IMessageBroker {
   }
 
   /**
-   * Finds all queues that are bound to the specified exchange and message routing key.
+   * Finds all queues that are bound to the specified exchange and message
+   * routing key.
    *
-   * @param string $routing_key
-   * @param string $from_exchange
-   * @param string $exchange_type
+   * @param string $routing_key Routing key.
+   * @param string $from_exchange Source exchange name.
+   * @param string $exchange_type Type of exchange source.
    * @return array of queue names
    * @throws MessageBrokerException 
    */
-  protected function getQueuesForMessage($routing_key, $from_exchange, $exchange_type) {
+  protected function getQueuesForMessage($routing_key, $from_exchange, 
+          $exchange_type) {
     $queues = array();
 
     if ($exchange_type == 'direct') {
-      // search all queues which are bound to the exchange and have the same routing key
+      // Search for all queues which are bound to the exchange
+      // and have the same routing key.
       foreach ($this->queues as $queue) {
         foreach ($queue['bindings'] as $binding) {
-          if ($binding['exchange'] == $from_exchange && $routing_key == $binding['routing_key']) {
+          if ($binding['exchange'] == $from_exchange &&
+                  $routing_key == $binding['routing_key']) {
             $queues[] = $queue['name'];
           }
         }
       }
     } elseif ($exchange_type == 'topic') {
-      // search all queues which are bound to the exchange
+      // Search for all queues which are bound to the exchange.
       foreach ($this->queues as $queue) {
         foreach ($queue['bindings'] as $binding) {
-          if ($binding['exchange'] == $from_exchange && $this->matchRoutingKey($routing_key, $binding['routing_key'])) {
+          if ($binding['exchange'] == $from_exchange &&
+                  $this->matchRoutingKey($routing_key, $binding['routing_key'])) {
             $queues[] = $queue['name'];
           }
         }

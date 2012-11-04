@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Drush command for consuming AMQP messages.
+ */
+
+/**
  * Implements hook_drush_command() for registering the consuming command.
  * @return array 
  */
@@ -19,8 +24,8 @@ function message_broker_amqp_integration_drush_command() {
       'aliases' => array('cons'),
       'examples' => array(
           'drush consume-amqp-messages helloWorldToEveryone --count-messages=10' => 'Consumes 10 messages for the consumer "helloWorldToEveryone"',
-          'drush cons' => 'Starts alls consumers and consumes all messages forever'
-      )
+          'drush cons' => 'Starts alls consumers and consumes all messages forever',
+      ),
   );
 
   return $items;
@@ -52,7 +57,8 @@ function drush_message_broker_amqp_integration_consume_amqp_messages($consumer_n
     drush_print(dt('Starting the consumer "' . $consumer_name . '" ...'));
   }
 
-  $broker->consumeMessages($consumer_name, (int) drush_get_option('count-messages', null), new DrushConsumerLogger());
+  $broker->consumeMessages($consumer_name, (int)drush_get_option('count-messages',
+          NULL), new DrushConsumerLogger());
 
   return TRUE;
 }

@@ -16,11 +16,12 @@ function message_broker_dummy_integration_message_broker_integration_implementat
 /**
  * Creates the dummy implementation.
  *
- * @param array $consumers
- * @param string $self_name
+ * @param array $consumers Consumers.
+ * @param string $self_name Name of this drupal instance.
  * @return \DummyMessageBroker 
  */
-function _message_broker_dummy_integration_create_implementation($consumers, $self_name) {
+function _message_broker_dummy_integration_create_implementation($consumers, 
+        $self_name) {
   require_once 'dummy_message_broker.inc';
 
   $config_path = variable_get('message_broker_dummy_integration_config', '');
@@ -70,7 +71,9 @@ function message_broker_dummy_integration_menu() {
  * @return array 
  */
 function message_broker_dummy_integration_settings($form, &$form_state) {
-  $form['intro'] = array('#markup' => '<p>' . t('Specify the path to the message broker configuration file which contains the definitions for all exchanges and queues.') . '</p>');
+  $form['intro'] = array('#markup' => '<p>' . t('Specify the path to the ' .
+          'message broker configuration file which contains the definitions ' .
+          'for all exchanges and queues.') . '</p>');
 
   $form['message_broker_dummy_integration_config'] = array(
       '#type' => 'textfield',

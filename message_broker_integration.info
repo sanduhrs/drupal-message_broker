@@ -5,3 +5,5 @@ description = Integrates a message broker into drupal, enables modules to work e
 php = 5.3
 package = "Messagebroker"
 configure = admin/config/system/message_broker_integration
+files[] = message_broker_interface.inc
+files[] = message_broker_exception.inc

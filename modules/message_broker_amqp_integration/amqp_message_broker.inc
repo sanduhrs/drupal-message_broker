@@ -1,9 +1,11 @@
 <?php
 
+use \PhpAmqpLib\Connection\AMQPConnection;
+
 /**
  * @file
  * Message broker integration implementation that uses AMQP.
-*/
+ */
 
 /**
  * Implementation of the IMessagebroker interface to integrate
@@ -23,11 +25,11 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Creates an AmqpMessageBroker instance. Specify an array with infos
    * about host, vhost and the credentials:
-   * array('host' => 'localhost', 'port' => 80, 'vhost' => '/', 'username' => '?',
-   *       'password' => '?')
+   * array('host' => 'localhost', 'port' => 80, 'vhost' => '/', 
+   *       'username' => '?', 'password' => '?')
    *
    * @param array $params
-   * @param array $consumers
+   * @param array $consumers Consumers.
    */
   public function __construct(array $params, array $consumers) {
     $this->init($params);
@@ -38,25 +40,28 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Connects to the message broker and declares all exchanges and queues.
    *
-   * @param array $params
+   * @param array $params Configuration array containing exchanges, queues
+   * and the credentials etc.
    */
   protected function init(array $params) {
     try {
-      $this->connection = new \PhpAmqpLib\Connection\AMQPConnection($params['host'], $params['port'],
-                      $params['username'], $params['password'], $params['vhost']);
+      $this->connection = new AMQPConnection($params['host'], $params['port'], 
+              $params['username'], $params['password'], $params['vhost']);
       $this->channel = $this->connection->channel(NULL);
 
       $this->declareExchanges($params['config']['exchanges']);
       $this->declareQueues($params['config']['queues']);
     } catch (Exception $e) {
-      throw new MessageBrokerException('Connecting to the AMQP server ' . $params['host'] . ' on port ' . $params['port'] . ' failed: ' . $e->getMessage());
+      throw new MessageBrokerException('Connecting to the AMQP server ' . 
+              $params['host'] . ' on port ' . $params['port'] . ' failed: ' . 
+              $e->getMessage());
     }
   }
 
   /**
    * Declares all exchanges.
    *
-   * @param array $exchanges
+   * @param array $exchanges Exchanges to declare.
    */
   protected function declareExchanges(array $exchanges = array()) {
     foreach ($exchanges as $exchange) {
@@ -80,14 +85,17 @@ class AmqpMessageBroker implements \IMessageBroker {
         $exchange['nowait'] = FALSE;
       }
 
-      $this->channel->exchange_declare($exchange['name'], $exchange['type'], $exchange['passive'], $exchange['durable'], $exchange['auto_delete'], $exchange['internal'], $exchange['nowait']);
+      $this->channel->exchange_declare($exchange['name'], $exchange['type'], 
+              $exchange['passive'], $exchange['durable'], 
+              $exchange['auto_delete'], $exchange['internal'], 
+              $exchange['nowait']);
     }
   }
 
   /**
    * Declares all queues and its bindings.
    *
-   * @param array $queues
+   * @param array $queues Queues to declare.
    */
   protected function declareQueues(array $queues = array()) {
     if (!empty($queues)) {
@@ -112,11 +120,14 @@ class AmqpMessageBroker implements \IMessageBroker {
           $queue['auto_delete'] = TRUE;
         }
 
-        $this->channel->queue_declare($queue['name'], $queue['passive'], $queue['durable'], $queue['exclusive'], $queue['auto_delete'], $queue['nowait']);
+        $this->channel->queue_declare($queue['name'], $queue['passive'], 
+                $queue['durable'], $queue['exclusive'], $queue['auto_delete'], 
+                $queue['nowait']);
 
         if (!empty($queue['bindings'])) {
           foreach ($queue['bindings'] as $binding) {
-            $this->channel->queue_bind($queue['name'], $binding['exchange'], $binding['routing_key']);
+            $this->channel->queue_bind($queue['name'], $binding['exchange'], 
+                    $binding['routing_key']);
           }
         }
       }
@@ -126,8 +137,8 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Gets the parameters used when publishing messages.
    *
-   * @param array $options
-   * @return array
+   * @param array $options Input message options.
+   * @return array Completed message parameters.
    */
   protected function getMessageParams(array $options) {
     if (!isset($options['content_type'])) {
@@ -150,13 +161,14 @@ class AmqpMessageBroker implements \IMessageBroker {
    * - content_type (default = 'text/plain')
    * - anything you want
    *
-   * @param string $body
-   * @param string $destination
-   * @param array $options
+   * @param string $body Message body.
+   * @param string $destination Destination of message.
+   * @param array $options Further message options.
    */
   public function sendMessage($body, $destination, array $options = array()) {
     if (!is_string($body)) {
-      throw new InvalidArgumentException('The message body must be a string! Serialize your data to json, xml or anything you prefer.');
+      throw new InvalidArgumentException('The message body must be a string! ' .
+              'Serialize your data to json, xml or anything you prefer.');
     }
 
     $routing_key = "";
@@ -176,8 +188,8 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Checks whether a specific consumer exists.
    *
-   * @param string $consumer_name
-   * @return bool
+   * @param string $consumer_name Name of consumer.
+   * @return bool True if consumer exists.
    */
   public function consumerExists($consumer_name) {
     return !empty($this->consumers[$consumer_name]);
@@ -186,19 +198,21 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Consumes messages with all or only the specified consumer.
    *
-   * @param string $consumer_name
-   * @param int count_messages_to_process count of messages to consume
-   * @param IConsumerLogger $logger
-   * @return int count consumed messages
+   * @param string $consumer_name Name of the consumer.
+   * @param int count_messages_to_process Count of messages to consume.
+   * @param IConsumerLogger $logger The logger to use.
+   * @return int Count consumed messages.
    */
-  public function consumeMessages($consumer_name, $count_messages_to_process, IConsumerLogger $logger) {
+  public function consumeMessages($consumer_name, $count_messages_to_process,
+          IConsumerLogger $logger) {
     $consumers = array();
 
     if (!empty($consumer_name)) {
       if ($this->consumerExists($consumer_name)) {
         $consumers[$consumer_name] = $this->consumers[$consumer_name];
       } else {
-        return $logger->logError('The consumer "' . $consumer_name . '" does not exist!');
+        return $logger->logError('The consumer "' . $consumer_name . 
+                '" does not exist!');
       }
     } else {
       $consumers = $this->consumers;
@@ -212,12 +226,15 @@ class AmqpMessageBroker implements \IMessageBroker {
 
     foreach ($consumers as $name => $consumerInfos) {
       $that = $this;
-      $this->channel->basic_consume($consumerInfos['queue'], $name, FALSE, FALSE, FALSE, FALSE, function($message) use($consumerInfos, $logger, $name, &$count_messages, $that) {
+      $this->channel->basic_consume($consumerInfos['queue'], $name, FALSE, 
+              FALSE, FALSE, FALSE, function($message) use($consumerInfos, 
+              $logger, $name, &$count_messages, $that) {
         $logger->logInfo('Process message with consumer "' . $name . '"');
         $acked = FALSE;
 
         try {
-          call_user_func($consumerInfos['callback'], $message, function() use ($message, $logger, $name, &$count_messages, &$acked) {
+          call_user_func($consumerInfos['callback'], $message, function() 
+                  use ($message, $logger, $name, &$count_messages, &$acked) {
                     $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
                     $acked = TRUE;
                     $count_messages++;

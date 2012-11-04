@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Requirements check and uninstall hook.
+ */
+
+/**
  * Implements hook_uninstall(). 
  */
 function message_broker_amqp_integration_uninstall() {
@@ -13,7 +18,8 @@ function message_broker_amqp_integration_uninstall() {
 }
 
 /**
- * Implements hook_requirements() and searches for the required PHP Amqp library.
+ * Implements hook_requirements() and searches for the required PHP
+ * Amqp library.
  *
  * @param string $phase
  * @return array

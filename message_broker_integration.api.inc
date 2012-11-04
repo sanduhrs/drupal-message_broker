@@ -6,11 +6,12 @@
  */
 
 /**
- * Registers consumers in the message broker. Specify the queue you want to consume and
- * your callback. 
- * The given callback is called with two parameters: body and ack, a callable method you
- * use to ack the incoming message.
- * Optional, you can specify an invalidMessageHandler that reveives invalid messages.
+ * Registers consumers in the message broker. Specify the queue you want to
+ * consume and your callback.
+ * The given callback is called with two parameters: body and ack, a callable
+ * method you use to ack the incoming message.
+ * Optional, you can specify an invalidMessageHandler that reveives invalid
+ * messages.
  *
  * @param string $self_name
  * @return array consumers
@@ -18,8 +19,10 @@
 function hook_message_broker_consumers($self_name) {
   $consumers = array();
 
-  $consumers['foo_consumer_' . $self_name] = array('queue' => 'foo' . $self_name,
-      'callback' => 'mymodule_consume_message', 'invalidMessageHandler' => 'mymodule_log_invalid_message');
+  $consumers['consumer_' . $self_name] = array(
+      'queue' => 'foo' . $self_name,
+      'callback' => 'mymodule_consume_message', 
+      'invalidMessageHandler' => 'mymodule_log_invalid_message');
 
   return $consumers;
 }
@@ -27,8 +30,8 @@ function hook_message_broker_consumers($self_name) {
 /**
  * Consumes one message.
  *
- * @param mixed $message
- * @param callable $ack
+ * @param mixed $message The message to consume.
+ * @param callable $ack Call this method for acking the message.
  */
 function mymodule_consume_message($message, $ack) {
   // Process and ack message
@@ -36,37 +39,39 @@ function mymodule_consume_message($message, $ack) {
 }
 
 /**
- * Logs invalid messages to watchdog. This callback is executed whenever a consumer throws
- * an InvalidMessageException. The message broker module catches these exceptions, acks
- * the message and allows to handle the invalid data on your own.
+ * This callback is executed whenever a consumer throws an
+ * InvalidMessageException. The message broker module catches
+ * these exceptions, acks the message and allows to handle the invalid data on
+ * your own.
  *
- * @param mixed $msg
+ * @param mixed $message Invalid message.
  */
-function mymodule_log_invalid_message($msg) {
+function mymodule_log_invalid_message($message) {
   // Log message for instance to a file
 }
 
 /**
- * Registers a message broker integration implementation. Describe the implementation via
- * a title, description and a factoryMethod. The latter one shall return an instance that implements the 
- * IMessageBroker interface.
+ * Registers a message broker integration implementation. Describe the
+ * implementation via a title, description and a factoryMethod. The latter one
+ * shall return an instance that implements the IMessageBroker interface.
  *
  * @return array
  */
 function hook_message_broker_integration_implementation() {
   $implementations = array();
 
-  $implementations['foo'] = array('title' => t('Foo'), 'factoryMethod' => 'mymodule_create_implementation',
+  $implementations['foo'] = array(
+      'title' => t('Foo'), 'factoryMethod' => 'mymodule_create_implementation',
       'description' => t('A message broker implementation'));
 
   return $implementations;
 }
 
 /**
- * Creates an instanceof the IMessageBroker.
+ * Creates an instance of the IMessageBroker.
  *
- * @param array $consumers
- * @param string $self_name
+ * @param array $consumers The registered consumers.
+ * @param string $self_name Name of this drupal instance.
  */
 function mymodule_create_implementation($consumers, $self_name) {
   // return instanceof IMessageBroker

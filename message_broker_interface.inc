@@ -6,7 +6,7 @@
  */
 
 /**
- * Represents the message broker, that may be implemented via AQMP or any 
+ * Represents the message broker, that may be implemented via AQMP or any
  * other protocol.
  */
 interface IMessageBroker {
@@ -14,9 +14,9 @@ interface IMessageBroker {
   /**
    * Sends a message to the message broker.
    *
-   * @param string $body
-   * @param string $destination
-   * @param array $options
+   * @param string $body Message body.
+   * @param string $destination Destination of message.
+   * @param array $options Further messasge options.
    */
-  function sendMessage($body, $destination, array $options = array());
+  public function sendMessage($body, $destination, array $options = array());
 }

@@ -39,7 +39,8 @@ function message_broker_integration_example_form($form, &$form_state) {
 }
 
 /**
- * Submit function for the hello world example, that sends a valid or invalid message.
+ * Submit function for the hello world example, that sends a valid or
+ * invalid message.
  *
  * @param array $form
  * @param array $form_state 
@@ -49,20 +50,23 @@ function message_broker_integration_example_form_submit(&$form, &$form_state) {
   $message = new stdClass();
   $message->name = $form_state['values']['name'];
 
-  $broker->sendMessage(json_encode($message), 'helloWorld', array('routing_key' => 'helloWorld.' . $message->name));
+  $broker->sendMessage(json_encode($message), 'helloWorld', 
+          array('routing_key' => 'helloWorld.' . $message->name));
 }
 
 /**
  * Implements hook_message_broker_consumers().
  *
  * @param string $self_name name of this drupal instance
- * @return string 
+ * @return array 
  */
 function message_broker_integration_example_message_broker_consumers($self_name) {
   $consumers = array();
 
   // An example consumer implemented using a closure.
-  $consumers['helloWorldToEveryone'] = array('queue' => 'helloWorldForAll', 'callback' => function($message, \Closure $ack) {
+  $consumers['helloWorldToEveryone'] = array(
+      'queue' => 'helloWorldForAll', 
+      'callback' => function($message, \Closure $ack) {
         $message = json_decode($message->body);
 
         if ($message->name == 'crash') {
@@ -84,9 +88,11 @@ function message_broker_integration_example_message_broker_consumers($self_name)
         }
       });
 
-  // This consumer will only give a special hello to "Drupal", see the example_config.json to understand why
-  // (look at the routing keys)
-  $consumers['specialHelloWorld'] = array('queue' => 'helloWorldForDrupal', 'callback' => '_message_broker_integration_example_special_hello_world');
+  // This consumer will only give a special hello to "Drupal", see the
+  // example_config.json to understand why (look at the routing keys).
+  $consumers['specialHelloWorld'] = array(
+      'queue' => 'helloWorldForDrupal', 
+      'callback' => '_message_broker_integration_example_special_hello_world');
 
   return $consumers;
 }
@@ -97,7 +103,8 @@ function message_broker_integration_example_message_broker_consumers($self_name)
  * @param stdClass $message
  * @param \Closure $ack 
  */
-function _message_broker_integration_example_special_hello_world($message, \Closure $ack) {
+function _message_broker_integration_example_special_hello_world($message, 
+        \Closure $ack) {
   $message = json_decode($message->body);
 
   if (function_exists('drush_print')) {

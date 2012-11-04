@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Interface for a Logger that reports consuming infos.
+ */
+
+/**
  * Represents a logger that outputs info and error strings while consuming
  * message broker messages. 
  */
@@ -11,12 +16,12 @@ interface IConsumerLogger {
    *
    * @param string $message
    */
-  function logInfo($message);
+  public function logInfo($message);
 
   /**
    * Logs an error message.
    *
    * @param string $message
    */
-  function logError($message);
+  public function logError($message);
 }

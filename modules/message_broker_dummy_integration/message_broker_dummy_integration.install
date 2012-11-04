@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Uninstall hook.
+ */
+
+/**
  * Implements hook_uninstall().
  */
 function message_broker_dummy_integration_uninstall() {

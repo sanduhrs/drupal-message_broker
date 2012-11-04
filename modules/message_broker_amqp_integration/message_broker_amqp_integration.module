@@ -1,8 +1,5 @@
 <?php
 
-require_once 'consumer_logger.inc';
-require_once 'drush_consumer_logger.inc';
-
 /**
  * Implements hook_message_broker_integration_implementation() that informs the
  * message_broker_integration module about this implementation.

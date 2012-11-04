@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Enable hook.
+ */
+
+/**
  * Implements hook_enable. This will set the configuration path
  * in the existing integration modules.
  */
