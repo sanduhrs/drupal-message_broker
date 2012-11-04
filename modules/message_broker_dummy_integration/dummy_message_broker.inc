@@ -129,7 +129,8 @@ class DummyMessageBroker implements \IMessageBroker {
     if (!$acked) {
       watchdog('dummy_message_broker', 'A message was not processed successfully, because it was not acked by the consumer "' . $queue_name . '"! Message: ' . $body);
       drupal_set_message(t('A message was not processed successfully, it was not acked by the consumer "@consumer"', array('@consumer' => $queue_name)), 'warning');
-    } else if (!$invalid_message) {
+    }
+    else if (!$invalid_message) {
       drupal_set_message(t('Message was processed successfully by consumer "@consumer"', array('@consumer' => $queue_name)));
     }
   }
@@ -166,7 +167,8 @@ class DummyMessageBroker implements \IMessageBroker {
           // at the moment.
           $matches = $matches && TRUE;
           break;
-        } else {
+        }
+        else {
           throw new MessageBrokerException('Pattern matching with "#" hashes within the pattern is not implemented yet!');
         }
       }
@@ -207,7 +209,8 @@ class DummyMessageBroker implements \IMessageBroker {
           }
         }
       }
-    } elseif ($exchange_type == 'topic') {
+    }
+    elseif ($exchange_type == 'topic') {
       // Search for all queues which are bound to the exchange.
       foreach ($this->queues as $queue) {
         foreach ($queue['bindings'] as $binding) {
@@ -217,7 +220,8 @@ class DummyMessageBroker implements \IMessageBroker {
           }
         }
       }
-    } elseif ($exchange_type == 'fanout') {
+    }
+    elseif ($exchange_type == 'fanout') {
       // search all queues which are bound to the exchange
       foreach ($this->queues as $queue) {
         foreach ($queue['bindings'] as $binding) {
@@ -226,9 +230,11 @@ class DummyMessageBroker implements \IMessageBroker {
           }
         }
       }
-    } elseif ($exchange_type == 'headers') {
+    }
+    elseif ($exchange_type == 'headers') {
       throw new MessageBrokerException('Exchange type "headers" is not implemented!');
-    } else {
+    }
+    else {
       throw new MessageBrokerException('Uknown exchange type "' . $exchange_type . '" of exchange with name "' . $from_exchange . '"');
     }
 

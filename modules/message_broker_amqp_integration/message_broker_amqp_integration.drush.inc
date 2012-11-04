@@ -59,7 +59,8 @@ function drush_message_broker_amqp_integration_consume_amqp_messages($consumer_n
 
   if (empty($consumer_name)) {
     drush_print(dt('Starting all consumers ...'));
-  } else {
+  }
+  else {
     drush_print(dt('Starting the consumer "' . $consumer_name . '" ...'));
   }
 

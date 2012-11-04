@@ -231,11 +231,13 @@ class AmqpMessageBroker implements \IMessageBroker {
     if (!empty($consumer_name)) {
       if ($this->consumerExists($consumer_name)) {
         $consumers[$consumer_name] = $this->consumers[$consumer_name];
-      } else {
+      }
+      else {
         return $logger->logError('The consumer "' . $consumer_name .
                 '" does not exist!');
       }
-    } else {
+    }
+    else {
       $consumers = $this->consumers;
     }
 
@@ -309,7 +311,8 @@ class AmqpMessageBroker implements \IMessageBroker {
   public function handleInvalidMessage($message, $consumer_infos) {
     if (isset($consumer_infos['invalidMessageHandler'])) {
       call_user_func($consumer_infos['invalidMessageHandler'], $message);
-    } else {
+    }
+    else {
       watchdog('amqp_message_broker', 'Invalid message, body:' . $message->body);
     }
   }

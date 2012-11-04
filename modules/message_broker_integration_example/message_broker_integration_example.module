@@ -85,7 +85,8 @@ function message_broker_integration_example_message_broker_consumers($self_name)
 
       if (function_exists('drush_print')) {
         drush_print('Hello world, ' . $message->name);
-      } else {
+      }
+      else {
         drupal_set_message('Hello world, ' . $message->name);
       }
 
@@ -93,7 +94,8 @@ function message_broker_integration_example_message_broker_consumers($self_name)
     }, 'invalidMessageHandler' => function($message) {
       if (function_exists('drush_print')) {
         drush_print('Invalid message handler was executed.');
-      } else {
+      }
+      else {
         drupal_set_message('Invalid message handler was executed.', 'warning');
       }
     });
@@ -121,7 +123,8 @@ function _message_broker_integration_example_special_hello_world($message,
 
   if (function_exists('drush_print')) {
     drush_print('A special hello to ' . $message->name . '!');
-  } else {
+  }
+  else {
     drupal_set_message('A special hello to ' . $message->name . '!');
   }
 
