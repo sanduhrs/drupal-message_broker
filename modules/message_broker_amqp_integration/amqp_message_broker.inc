@@ -24,9 +24,9 @@ class AmqpMessageBroker implements \IMessageBroker {
 
   /**
    * Creates an AmqpMessageBroker instance.
-   * 
+   *
    * Specify an array with infos about host, vhost and the credentials:
-   * array('host' => 'localhost', 'port' => 80, 'vhost' => '/', 
+   * array('host' => 'localhost', 'port' => 80, 'vhost' => '/',
    *       'username' => '?', 'password' => '?')
    *
    * @param array $params
@@ -48,7 +48,7 @@ class AmqpMessageBroker implements \IMessageBroker {
    */
   protected function init(array $params) {
     try {
-      $this->connection = new AMQPConnection($params['host'], $params['port'], 
+      $this->connection = new AMQPConnection($params['host'], $params['port'],
               $params['username'], $params['password'], $params['vhost']);
       $this->channel = $this->connection->channel(NULL);
 
@@ -248,8 +248,8 @@ class AmqpMessageBroker implements \IMessageBroker {
     foreach ($consumers as $name => $consumer_infos) {
       $that = $this;
       $this->channel->basic_consume($consumer_infos['queue'], $name, FALSE, 
-          FALSE, FALSE, FALSE, function($message) use($consumer_infos, 
-          $logger, $name, &$count_messages, $that) {
+      FALSE, FALSE, FALSE, 
+      function($message) use($consumer_infos, $logger, $name, &$count_messages, $that) {
         $logger->logInfo('Process message with consumer "' . $name . '"');
         $acked = FALSE;
 
@@ -313,5 +313,5 @@ class AmqpMessageBroker implements \IMessageBroker {
       watchdog('amqp_message_broker', 'Invalid message, body:' . $message->body);
     }
   }
-  
+
 }

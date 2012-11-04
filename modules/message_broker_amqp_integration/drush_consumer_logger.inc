@@ -14,6 +14,7 @@ class DrushConsumerLogger implements IConsumerLogger {
    * Logs an info message.
    *
    * @param string $message
+   *   The message to log.
    */
   public function logInfo($message) {
     drush_print($message);
@@ -23,6 +24,7 @@ class DrushConsumerLogger implements IConsumerLogger {
    * Logs an error message.
    *
    * @param string $message
+   *   The message to log.
    */
   public function logError($message) {
     return drush_print('Error (' . date('d.m.Y H:i') . '): ' . $message);

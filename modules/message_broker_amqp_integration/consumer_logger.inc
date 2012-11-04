@@ -7,7 +7,7 @@
 
 /**
  * Represents a logger that outputs info and error strings while consuming
- * message broker messages. 
+ * message broker messages.
  */
 interface IConsumerLogger {
 

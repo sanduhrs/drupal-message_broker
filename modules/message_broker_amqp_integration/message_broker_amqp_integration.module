@@ -110,9 +110,10 @@ function message_broker_amqp_integration_menu() {
  * @param array $form
  *   Form.
  * @param array $form_state
- *  Form state.
+ *    Form state.
  *
- * @return array 
+ * @return array
+ *   Settings form.
  */
 function message_broker_amqp_integration_settings($form, &$form_state) {
   $form['intro'] = array('#markup' => '<p>' . t('Enter host and credentials for the AMQP compliant message broker you want to use.') . '</p>');

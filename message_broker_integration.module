@@ -19,7 +19,7 @@ function _message_broker_integration_get_implementations() {
  * Returns all consumers.
  *
  * @return array
- *  All registered consumers.
+ *    All registered consumers.
  */
 function _message_broker_integration_get_consumers() {
   return module_invoke_all('message_broker_consumers',

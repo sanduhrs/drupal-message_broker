@@ -44,7 +44,7 @@ function message_broker_integration_example_form($form, &$form_state) {
 
 /**
  * Submit function for the hello world example.
- * 
+ *
  * Sends valid and invalid messages.
  *
  * @param array $form
@@ -57,7 +57,7 @@ function message_broker_integration_example_form_submit(&$form, &$form_state) {
   $message = new stdClass();
   $message->name = $form_state['values']['name'];
 
-  $broker->sendMessage(json_encode($message), 'helloWorld', 
+  $broker->sendMessage(json_encode($message), 'helloWorld',
           array('routing_key' => 'helloWorld.' . $message->name));
 }
 

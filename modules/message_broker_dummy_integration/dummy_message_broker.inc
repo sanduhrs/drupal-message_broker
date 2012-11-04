@@ -14,12 +14,28 @@ class DummyMessageBroker implements \IMessageBroker {
   protected $queues;
   protected $exchanges;
 
+  /**
+   * Creates the dummy message broker implementation.
+   *
+   * @param array $config
+   *   Configuration.
+   * @param array $consumers
+   *   Consumers.
+   */
   public function __construct($config, $consumers) {
     $this->exchanges = $config['exchanges'];
     $this->queues = $config['queues'];
     $this->consumers = $consumers;
   }
 
+  /**
+   * 
+   * @param string $exchange_name
+   *   Name of exchange.
+   *
+   * @return mixed
+   *   Exchange array or FALSE.
+   */
   protected function findExchangeByName($exchange_name) {
     foreach ($this->exchanges as $exchange) {
       if ($exchange['name'] == $exchange_name) {
@@ -27,15 +43,18 @@ class DummyMessageBroker implements \IMessageBroker {
       }
     }
 
-    return false;
+    return FALSE;
   }
 
   /**
    * Sends a message to the message broker.
    *
    * @param string $body
+   *   Message body.
    * @param string $destination
+   *   Message destination.
    * @param array $options
+   *   Message options.
    */
   public function sendMessage($body, $destination, array $options = array()) {
     if (!is_string($body)) {
@@ -69,17 +88,20 @@ class DummyMessageBroker implements \IMessageBroker {
    * Consume message using the specified consumer.
    *
    * @param string $body
+   *   Message body.
    * @param array $consumer
+   *   Consumer info array.
    * @param string $queue_name
+   *   Name of queue.
    */
   protected function callConsumer($body, $consumer, $queue_name) {
     $message = new stdClass();
     $message->body = $body;
     $acked = FALSE;
-    $invalidMessage = FALSE;
+    $invalid_message = FALSE;
 
     try {
-      drupal_set_message(t('Start consuming a message with "@consumer"', 
+      drupal_set_message(t('Start consuming a message with "@consumer"',
               array('@consumer' => $queue_name)));
       call_user_func($consumer['callback'], $message, function() use(&$acked) {
                 $acked = TRUE;
@@ -88,11 +110,11 @@ class DummyMessageBroker implements \IMessageBroker {
       if (!$acked) {
         $acked = TRUE;
         watchdog_exception('dummy_message_broker', $e);
-        watchdog('dummy_message_broker', 'Invalid message catched, body: ' . 
+        watchdog('dummy_message_broker', 'Invalid message catched, body: ' .
                 $body);
       }
 
-      $invalidMessage = TRUE;
+      $invalid_message = TRUE;
 
       if (isset($consumer['invalidMessageHandler'])) {
         call_user_func($consumer['invalidMessageHandler'], $message);
@@ -106,7 +128,7 @@ class DummyMessageBroker implements \IMessageBroker {
     if (!$acked) {
       watchdog('dummy_message_broker', 'A message was not processed successfully, because it was not acked by the consumer "' . $queue_name . '"! Message: ' . $body);
       drupal_set_message(t('A message was not processed successfully, it was not acked by the consumer "@consumer"', array('@consumer' => $queue_name)), 'warning');
-    } else if (!$invalidMessage) {
+    } else if (!$invalid_message) {
       drupal_set_message(t('Message was processed successfully by consumer "@consumer"', array('@consumer' => $queue_name)));
     }
   }
@@ -115,9 +137,13 @@ class DummyMessageBroker implements \IMessageBroker {
    * Matches a routing key with a given pattern.
    *
    * @param string $routing_key
+   *   Routing key.
    * @param string $pattern
-   * @return boolean if routing key matches the given pattern
-   * @throws MessageBrokerException 
+   *  Routing pattern.
+   *
+   * @return boolean
+   *   TRUE if routing key matches the given pattern.
+   * @throws MessageBrokerException
    */
   protected function matchRoutingKey($routing_key, $pattern) {
     if ($pattern == '#') {
@@ -160,9 +186,10 @@ class DummyMessageBroker implements \IMessageBroker {
    *   Source exchange name.
    * @param string $exchange_type
    *   Type of exchange source.
+   *
    * @return array
-   *   Array of queue names
-   * @throws MessageBrokerException 
+   *   Array of queue names.
+   * @throws MessageBrokerException
    */
   protected function getQueuesForMessage($routing_key, $from_exchange, 
           $exchange_type) {
