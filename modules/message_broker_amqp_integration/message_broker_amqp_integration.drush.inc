@@ -7,7 +7,9 @@
 
 /**
  * Implements hook_drush_command() for registering the consuming command.
- * @return array 
+ * 
+ * @return array
+ *   Registered commands.
  */
 function message_broker_amqp_integration_drush_command() {
   $items = array();
@@ -33,6 +35,7 @@ function message_broker_amqp_integration_drush_command() {
 
 /**
  * Implements the drush command "consume-amqp-messages".
+ * 
  * @param string $consumer_name
  * @return boolean 
  */

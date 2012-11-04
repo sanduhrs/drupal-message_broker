@@ -16,8 +16,10 @@ function message_broker_dummy_integration_message_broker_integration_implementat
 /**
  * Creates the dummy implementation.
  *
- * @param array $consumers Consumers.
- * @param string $self_name Name of this drupal instance.
+ * @param array $consumers
+ *   Consumers.
+ * @param string $self_name
+ *   Name of this drupal instance.
  * @return \DummyMessageBroker 
  */
 function _message_broker_dummy_integration_create_implementation($consumers, 

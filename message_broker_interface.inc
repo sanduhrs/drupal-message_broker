@@ -14,9 +14,12 @@ interface IMessageBroker {
   /**
    * Sends a message to the message broker.
    *
-   * @param string $body Message body.
-   * @param string $destination Destination of message.
-   * @param array $options Further messasge options.
+   * @param string $body
+   *   Message body.
+   * @param string $destination
+   *   Destination of message.
+   * @param array $options
+   *   Further messasge options.
    */
   public function sendMessage($body, $destination, array $options = array());
 }

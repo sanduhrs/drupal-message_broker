@@ -154,10 +154,14 @@ class DummyMessageBroker implements \IMessageBroker {
    * Finds all queues that are bound to the specified exchange and message
    * routing key.
    *
-   * @param string $routing_key Routing key.
-   * @param string $from_exchange Source exchange name.
-   * @param string $exchange_type Type of exchange source.
-   * @return array of queue names
+   * @param string $routing_key
+   *   Routing key.
+   * @param string $from_exchange
+   *   Source exchange name.
+   * @param string $exchange_type
+   *   Type of exchange source.
+   * @return array
+   *   Array of queue names
    * @throws MessageBrokerException 
    */
   protected function getQueuesForMessage($routing_key, $from_exchange, 

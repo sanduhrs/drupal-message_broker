@@ -29,7 +29,8 @@ class AmqpMessageBroker implements \IMessageBroker {
    *       'username' => '?', 'password' => '?')
    *
    * @param array $params
-   * @param array $consumers Consumers.
+   * @param array $consumers
+   *   Consumers.
    */
   public function __construct(array $params, array $consumers) {
     $this->init($params);
@@ -40,8 +41,8 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Connects to the message broker and declares all exchanges and queues.
    *
-   * @param array $params Configuration array containing exchanges, queues
-   * and the credentials etc.
+   * @param array $params
+   *   Configuration array containing exchanges, queues and the credentials etc.
    */
   protected function init(array $params) {
     try {
@@ -61,7 +62,8 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Declares all exchanges.
    *
-   * @param array $exchanges Exchanges to declare.
+   * @param array $exchanges
+   *   Exchanges to declare.
    */
   protected function declareExchanges(array $exchanges = array()) {
     foreach ($exchanges as $exchange) {
@@ -95,7 +97,8 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Declares all queues and its bindings.
    *
-   * @param array $queues Queues to declare.
+   * @param array $queues
+   *   Queues to declare.
    */
   protected function declareQueues(array $queues = array()) {
     if (!empty($queues)) {
@@ -137,8 +140,10 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Gets the parameters used when publishing messages.
    *
-   * @param array $options Input message options.
-   * @return array Completed message parameters.
+   * @param array $options
+   *   Input message options.
+   * @return array
+   *   Completed message parameters.
    */
   protected function getMessageParams(array $options) {
     if (!isset($options['content_type'])) {
@@ -154,16 +159,21 @@ class AmqpMessageBroker implements \IMessageBroker {
   }
 
   /**
-   * Sends a message to the message broker. Specify the routing within the third
-   * options parameter, like so array('routing_key' => 'your.key').
+   * Sends a message to the message broker.
+   *
+   * Specify the routing key within the third options parameter, like so:
+   * array('routing_key' => 'your.key').
    * You can pass more message options:
    * - delivery_mode (default value = '2', which means persistent)
    * - content_type (default = 'text/plain')
    * - anything you want
    *
-   * @param string $body Message body.
-   * @param string $destination Destination of message.
-   * @param array $options Further message options.
+   * @param string $body
+   *   Message body.
+   * @param string $destination
+   *   Destination of message.
+   * @param array $options
+   *   Further message options.
    */
   public function sendMessage($body, $destination, array $options = array()) {
     if (!is_string($body)) {
@@ -188,8 +198,10 @@ class AmqpMessageBroker implements \IMessageBroker {
   /**
    * Checks whether a specific consumer exists.
    *
-   * @param string $consumer_name Name of consumer.
-   * @return bool True if consumer exists.
+   * @param string $consumer_name
+   *   Name of consumer.
+   * @return bool
+   *   True if consumer exists.
    */
   public function consumerExists($consumer_name) {
     return !empty($this->consumers[$consumer_name]);

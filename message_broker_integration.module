@@ -17,18 +17,19 @@ function _message_broker_integration_get_implementations() {
 /**
  * Returns all consumers.
  *
- * @return array consumers
+ * @return array
  */
 function _message_broker_integration_get_consumers() {
-  return module_invoke_all('message_broker_consumers', 
+  return module_invoke_all('message_broker_consumers',
           variable_get('message_broker_integration_self', ''));
 }
 
 /**
  * Returns the implementation of the message broker integration.
  *
- * @return IMessageBroker 
- * @throws MessageBrokerException if no implementation is configured
+ * @return IMessageBroker
+ * @throws MessageBrokerException
+ *   If no implementation is configured
  */
 function message_broker_integration_get() {
   static $cached_implementation = NULL;
@@ -42,8 +43,8 @@ function message_broker_integration_get() {
     }
 
     $implementation = $implementations[$implementation_key];
-    $cached_implementation = call_user_func($implementation['factoryMethod'], 
-            _message_broker_integration_get_consumers(), 
+    $cached_implementation = call_user_func($implementation['factoryMethod'],
+            _message_broker_integration_get_consumers(),
             variable_get('message_broker_integration_self', ''));
 
     if (!$cached_implementation instanceof IMessageBroker) {
@@ -57,18 +58,19 @@ function message_broker_integration_get() {
 /**
  * Implements hook_menu().
  *
- * @return array registered menu entries
+ * @return array
+ *   Registered menu entries.
  */
 function message_broker_integration_menu() {
   $items = array();
 
   $items['admin/config/system/message_broker_integration'] = array(
-      'title' => 'Message Broker Integration',
-      'description' => 'Configure the message broker integration',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('message_broker_integration_settings'),
-      'type' => MENU_NORMAL_ITEM,
-      'access arguments' => array('administer site configuration'),
+    'title' => 'Message Broker Integration',
+    'description' => 'Configure the message broker integration',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('message_broker_integration_settings'),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array('administer site configuration'),
   );
 
   return $items;
@@ -79,7 +81,8 @@ function message_broker_integration_menu() {
  *
  * @param array $form
  * @param array $form_state
- * @return array settings form
+ * @return array
+ *   Settings form.
  */
 function message_broker_integration_settings($form, &$form_state) {
   $implementations = _message_broker_integration_get_implementations();
@@ -98,18 +101,18 @@ function message_broker_integration_settings($form, &$form_state) {
     page for the chosen implementation to see more options.') . '</p>');
 
   $form['message_broker_integration_implementation'] = array(
-      '#type' => 'radios',
-      '#options' => $options,
-      '#title' => t('Message broker integration implementation'),
-      '#default_value' => variable_get('message_broker_integration_implementation', '')
+    '#type' => 'radios',
+    '#options' => $options,
+    '#title' => t('Message broker integration implementation'),
+    '#default_value' => variable_get('message_broker_integration_implementation', ''),
   );
 
   $form['message_broker_integration_self'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Name of this drupal instance'),
-      '#description' => t('This value gets passed to the consumers hook,
-        enabling modules to consume queues that contain this name.'),
-      '#default_value' => variable_get('message_broker_integration_self', ''),
+    '#type' => 'textfield',
+    '#title' => t('Name of this drupal instance'),
+    '#description' => t('This value gets passed to the consumers hook,
+      enabling modules to consume queues that contain this name.'),
+    '#default_value' => variable_get('message_broker_integration_self', ''),
   );
 
   return system_settings_form($form);
@@ -118,7 +121,8 @@ function message_broker_integration_settings($form, &$form_state) {
 /**
  * Gets the self-name of this drupal instance.
  *
- * @return string Name of this drupal instance.
+ * @return string
+ *   Name of this drupal instance.
  */
 function message_broker_integration_get_website_name() {
   return variable_get('message_broker_integration_self', '');
