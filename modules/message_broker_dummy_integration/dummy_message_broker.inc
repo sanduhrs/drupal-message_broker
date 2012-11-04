@@ -29,7 +29,8 @@ class DummyMessageBroker implements \IMessageBroker {
   }
 
   /**
-   * 
+   * Finds exchange information by name.
+   *
    * @param string $exchange_name
    *   Name of exchange.
    *
@@ -72,7 +73,7 @@ class DummyMessageBroker implements \IMessageBroker {
     drupal_set_message(t('Message sent to exchange "@exchange" with routing key "@key"',
             array('@exchange' => $destination, '@key' => $options['routing_key'])));
 
-    $queues = $this->getQueuesForMessage($options['routing_key'], 
+    $queues = $this->getQueuesForMessage($options['routing_key'],
             $exchange['name'], $exchange['type']);
 
     foreach ($queues as $queue_name) {
@@ -191,7 +192,7 @@ class DummyMessageBroker implements \IMessageBroker {
    *   Array of queue names.
    * @throws MessageBrokerException
    */
-  protected function getQueuesForMessage($routing_key, $from_exchange, 
+  protected function getQueuesForMessage($routing_key, $from_exchange,
           $exchange_type) {
     $queues = array();
 

@@ -247,15 +247,15 @@ class AmqpMessageBroker implements \IMessageBroker {
 
     foreach ($consumers as $name => $consumer_infos) {
       $that = $this;
-      $this->channel->basic_consume($consumer_infos['queue'], $name, FALSE, 
-      FALSE, FALSE, FALSE, 
+      $this->channel->basic_consume($consumer_infos['queue'], $name, FALSE,
+      FALSE, FALSE, FALSE,
       function($message) use($consumer_infos, $logger, $name, &$count_messages, $that) {
         $logger->logInfo('Process message with consumer "' . $name . '"');
         $acked = FALSE;
 
         try {
-          call_user_func($consumer_infos['callback'], $message, function() 
-            use ($message, $logger, $name, &$count_messages, &$acked) {
+          call_user_func($consumer_infos['callback'], $message, 
+            function() use ($message, $logger, $name, &$count_messages, &$acked) {
               $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
               $acked = TRUE;
               $count_messages++;
