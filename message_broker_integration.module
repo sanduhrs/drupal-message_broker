@@ -137,23 +137,23 @@ function message_broker_integration_get_website_name() {
 
 /**
  * Creates a CriticalErrorException for usage within your consumer.
- * 
+ *
  * This method does create the desired instance reliable even if the database
  * connection was lost.
- * 
+ *
  * @param string $message
  *   Exception message.
  * @param string $code
  *   Exception code.
  * @param mixed $previous
  *   Previous exception.
- * 
+ *
  * @return \CriticalErrorException
  *   Creates exception instance.
  */
 function message_broker_integration_throw_critical_error($message = NULL, $code = NULL, $previous = NULL) {
-  // we include the file manually to prevent the drupal autoloading. which
-  // uses DB calls
+  // We include the file manually to prevent drupal autoloading, which
+  // relies on DB calls.
   require_once 'message_broker_exception.inc';
 
   return new CriticalErrorException($message, $code, $previous);

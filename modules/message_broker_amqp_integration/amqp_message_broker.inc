@@ -1,11 +1,11 @@
 <?php
 
-use \PhpAmqpLib\Connection\AMQPConnection;
-
 /**
  * @file
  * Message broker integration implementation that uses AMQP.
  */
+
+use \PhpAmqpLib\Connection\AMQPConnection;
 
 /**
  * Implementation of the IMessagebroker interface to integrate
