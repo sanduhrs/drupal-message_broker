@@ -45,12 +45,12 @@ function message_broker_integration_example_form($form, &$form_state) {
     '#markup' => '<p>' . t('You can trigger an InvalidMessageException if you enter "crash".') . '</p>');
 
   $form['name'] = array(
-    '#type' => 'textfield', 
-    '#required' => TRUE, 
+    '#type' => 'textfield',
+    '#required' => TRUE,
     '#title' => t('Say hello to'));
 
   $form['submit'] = array(
-    '#type' => 'submit', 
+    '#type' => 'submit',
     '#value' => t('Send message'));
 
   return $form;
