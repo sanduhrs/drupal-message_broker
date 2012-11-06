@@ -9,7 +9,7 @@
  * Returns all known message broker integration implementatinons.
  *
  * @return array
- *    Infos about message broker implementations collected via the hook.
+ *   Infos about message broker implementations collected via the hook.
  */
 function _message_broker_integration_get_implementations() {
   return module_invoke_all('message_broker_integration_implementation');
@@ -19,7 +19,7 @@ function _message_broker_integration_get_implementations() {
  * Returns all consumers.
  *
  * @return array
- *    All registered consumers.
+ *   All registered consumers.
  */
 function _message_broker_integration_get_consumers() {
   return module_invoke_all('message_broker_consumers',
@@ -133,4 +133,28 @@ function message_broker_integration_settings($form, &$form_state) {
  */
 function message_broker_integration_get_website_name() {
   return variable_get('message_broker_integration_self', '');
+}
+
+/**
+ * Creates a CriticalErrorException for usage within your consumer.
+ * 
+ * This method does create the desired instance reliable even if the database
+ * connection was lost.
+ * 
+ * @param string $message
+ *   Exception message.
+ * @param string $code
+ *   Exception code.
+ * @param mixed $previous
+ *   Previous exception.
+ * 
+ * @return \CriticalErrorException
+ *   Creates exception instance.
+ */
+function message_broker_integration_throw_critical_error($message = NULL, $code = NULL, $previous = NULL) {
+  // we include the file manually to prevent the drupal autoloading. which
+  // uses DB calls
+  require_once 'message_broker_exception.inc';
+
+  return new CriticalErrorException($message, $code, $previous);
 }
