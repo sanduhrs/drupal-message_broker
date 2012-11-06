@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Implements hook_menu(), registers the hello world example.
+ * @file
+ * Provides an example on how to use the API together with a sample config file.
+ */
+
+/**
+ * Implements hook_menu()
  */
 function message_broker_integration_example_menu() {
   $items = array();
@@ -30,14 +35,17 @@ function message_broker_integration_example_menu() {
  *   Example form.
  */
 function message_broker_integration_example_form($form, &$form_state) {
-  $form['title'] = array('#markup' => '<h2>Hello world example</h2>');
-  $form['intro'] = array('#markup' => '<p>This form lets you send a message to the exchange "helloWorld". The routing key will be "helloWorld.name_you_entered".');
-  $form['intro2'] = array('#markup' => '<p>The example declares two queues that are bound to this exchange. Enter any name to see the first consumer and "Drupal" to see the second one.');
-  $form['intro3'] = array('#markup' => '<p>You can trigger an InvalidMessageException if you enter "crash".');
+  $form['title'] = array(
+    '#markup' => '<h2>' . t('Hello world example') . '</h2>');
+  $form['intro'] = array(
+    '#markup' => '<p>' . t('This form lets you send a message to the exchange "helloWorld". The routing key will be "helloWorld.name_you_entered".' . '</p>'));
+  $form['intro2'] = array(
+    '#markup' => '<p>' . t('The example declares two queues that are bound to this exchange. Enter any name to see the first consumer and "Drupal" to see the second one.') . '</p>');
+  $form['intro3'] = array('#markup' => '<p>' . t('You can trigger an InvalidMessageException if you enter "crash".') . '</p>');
 
-  $form['name'] = array('#type' => 'textfield', '#required' => TRUE, '#title' => 'Say hello to');
+  $form['name'] = array('#type' => 'textfield', '#required' => TRUE, '#title' => t('Say hello to'));
 
-  $form['submit'] = array('#type' => 'submit', '#value' => 'Send message');
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Send message'));
 
   return $form;
 }

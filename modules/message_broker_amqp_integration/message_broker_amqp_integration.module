@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Integration into main module, configuration page and enabling of autoloading.
+ */
+
+/**
  * Implements hook_message_broker_integration_implementation().
  */
 function message_broker_amqp_integration_message_broker_integration_implementation() {
@@ -110,7 +115,7 @@ function message_broker_amqp_integration_menu() {
  * @param array $form
  *   Form.
  * @param array $form_state
- *    Form state.
+ *   Form state.
  *
  * @return array
  *   Settings form.

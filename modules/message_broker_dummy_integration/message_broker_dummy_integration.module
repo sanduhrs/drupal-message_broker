@@ -1,14 +1,19 @@
 <?php
 
 /**
+ * @file
+ * Integration into main module and configuration page.
+ */
+
+/**
  * Implements hook_message_broker_integration_implementation().
  */
 function message_broker_dummy_integration_message_broker_integration_implementation() {
   return array(
     'dummy' => array(
-    'title' => t('Dummy'),
-    'description' => t('A (partial) dummy implementation of the AMQP protocol that executes everything synchronously within the same request.'),
-    'factoryMethod' => '_message_broker_dummy_integration_create_implementation',
+      'title' => t('Dummy'),
+      'description' => t('A (partial) dummy implementation of the AMQP protocol that executes everything synchronously within the same request.'),
+      'factoryMethod' => '_message_broker_dummy_integration_create_implementation',
     ),
   );
 }
@@ -80,8 +85,7 @@ function message_broker_dummy_integration_menu() {
  */
 function message_broker_dummy_integration_settings($form, &$form_state) {
   $form['intro'] = array(
-    '#markup' => '<p>' . t('Specify the path to the message broker configuration file which contains the definitions ' .
-          'for all exchanges and queues.') . '</p>');
+    '#markup' => '<p>' . t('Specify the path to the message broker configuration file which contains the definitions for all exchanges and queues.') . '</p>');
 
   $form['message_broker_dummy_integration_config'] = array(
     '#type' => 'textfield',

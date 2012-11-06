@@ -141,7 +141,7 @@ class DummyMessageBroker implements \IMessageBroker {
    * @param string $routing_key
    *   Routing key.
    * @param string $pattern
-   *  Routing pattern.
+   *   Routing pattern.
    *
    * @return boolean
    *   TRUE if routing key matches the given pattern.
@@ -180,7 +180,6 @@ class DummyMessageBroker implements \IMessageBroker {
   }
 
   /**
-   * 
    * Finds all queues that are routed to the specified exchange.
    *
    * @param string $routing_key
@@ -222,7 +221,7 @@ class DummyMessageBroker implements \IMessageBroker {
       }
     }
     elseif ($exchange_type == 'fanout') {
-      // search all queues which are bound to the exchange
+      // Search all queues which are bound to the exchange.
       foreach ($this->queues as $queue) {
         foreach ($queue['bindings'] as $binding) {
           if ($binding['exchange'] == $from_exchange) {

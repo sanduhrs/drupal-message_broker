@@ -6,7 +6,7 @@
  */
 
 /**
- * Implements hook_drush_command() for registering the consuming command.
+ * Implements hook_drush_command().
  *
  * @return array
  *   Registered commands.
