@@ -138,7 +138,7 @@ function message_broker_integration_get_website_name() {
 /**
  * Creates a CriticalErrorException for usage within your consumer.
  *
- * This method does create the desired instance reliable even if the database
+ * This method creates the desired instance reliable even if the database
  * connection was lost.
  *
  * @param string $message
