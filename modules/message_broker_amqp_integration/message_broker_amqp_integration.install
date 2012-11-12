@@ -18,6 +18,32 @@ function message_broker_amqp_integration_uninstall() {
 }
 
 /**
+ * Checks whether the PHP AMQP library is installed correctly.
+ *
+ * @return bool
+ *   TRUE if library is installed correctly.
+ */
+function _message_broker_amqp_integration_library_exists() {
+  if (function_exists('libraries_get_libraries')) {
+      $installed_libraries = libraries_get_libraries();
+      $lib_path = libraries_get_path('phpamqp') . DIRECTORY_SEPARATOR . 'PhpAmqpLib';
+
+      return isset($installed_libraries['phpamqp']) && file_exists($lib_path);
+  }
+  
+  return FALSE;
+}
+
+/**
+ * Implements hook_eanble().
+ */
+function message_broker_amqp_integration_enable() {
+  if (!_message_broker_amqp_integration_library_exists()) {
+    drupal_set_message(t('You need to install the PHP AMQP library. See your !status_report for more details!', array('!status_report' => l('status report', 'admin/reports/status'))), 'warning');
+  }
+}
+
+/**
  * Implements hook_requirements().
  *
  * @param string $phase
@@ -32,23 +58,14 @@ function message_broker_amqp_integration_requirements($phase) {
 
   if ($phase == 'runtime') {
     $requirements['phpamqp_library']['title'] = $t('PHP AMQP Library');
-    $requirements['phpamqp_library']['description'] = $t('The library needed to connect to an AMQP complaint message broker server.');
+    $requirements['phpamqp_library']['description'] = $t('The library needed to connect to an AMQP compliant message broker server.');
 
-    if (function_exists('libraries_get_libraries')) {
-      $installed_libraries = libraries_get_libraries();
-      $lib_path = libraries_get_path('phpamqp') . DIRECTORY_SEPARATOR . 'PhpAmqpLib';
-
-      if (isset($installed_libraries['phpamqp']) && file_exists($lib_path)) {
-        $requirements['phpamqp_library']['value'] = $t('Installed');
-        $requirements['phpamqp_library']['severity'] = REQUIREMENT_OK;
-      }
-      else {
-        $requirements['phpamqp_library']['value'] = $t('Not installed, please download from !url and put in a folder with the name "phpamqp".', array('!url' => l('https://github.com/videlalvaro/php-amqplib', 'https://github.com/videlalvaro/php-amqplib')));
-        $requirements['phpamqp_library']['severity'] = REQUIREMENT_ERROR;
-      }
+    if (_message_broker_amqp_integration_library_exists()) {
+      $requirements['phpamqp_library']['value'] = $t('Installed');
+      $requirements['phpamqp_library']['severity'] = REQUIREMENT_OK;
     }
     else {
-      $requirements['phpamqp_library']['value'] = $t('Libraries dependency is missing');
+      $requirements['phpamqp_library']['value'] = $t('Not installed, please download from !url and put in a folder with the name "phpamqp".', array('!url' => l('https://github.com/videlalvaro/php-amqplib', 'https://github.com/videlalvaro/php-amqplib')));
       $requirements['phpamqp_library']['severity'] = REQUIREMENT_ERROR;
     }
   }
