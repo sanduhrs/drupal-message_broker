@@ -107,7 +107,7 @@ function message_broker_dummy_integration_settings($form, &$form_state) {
 function message_broker_dummy_integration_settings_validate($form, &$form_state) {
   if (!empty($form_state['values']['message_broker_dummy_integration_config'])) {
     if (!file_exists($form_state['values']['message_broker_dummy_integration_config'])) {
-      form_set_error('message_broker_dummy_integration_config', 'The json file was not found, please check the path.');
+      form_set_error('message_broker_dummy_integration_config', t('The json file was not found, please check the path.'));
       return;
     }
 
@@ -115,7 +115,7 @@ function message_broker_dummy_integration_settings_validate($form, &$form_state)
     $config = json_decode($config_file, TRUE);
 
     if ($config === NULL) {
-      form_set_error('message_broker_dummy_integration_config', 'The JSON file was not parsed successfully.');
+      form_set_error('message_broker_dummy_integration_config', t('The JSON file was not parsed successfully.'));
     }
   }
 }
