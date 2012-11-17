@@ -25,10 +25,10 @@ function message_broker_amqp_integration_uninstall() {
  */
 function _message_broker_amqp_integration_library_exists() {
   if (function_exists('libraries_get_libraries')) {
-      $installed_libraries = libraries_get_libraries();
-      $lib_path = libraries_get_path('phpamqp') . DIRECTORY_SEPARATOR . 'PhpAmqpLib';
+    $installed_libraries = libraries_get_libraries();
+    $lib_path = libraries_get_path('phpamqp') . DIRECTORY_SEPARATOR . 'PhpAmqpLib';
 
-      return isset($installed_libraries['phpamqp']) && file_exists($lib_path);
+    return isset($installed_libraries['phpamqp']) && file_exists($lib_path);
   }
   
   return FALSE;
