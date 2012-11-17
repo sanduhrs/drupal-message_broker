@@ -30,7 +30,7 @@ function _message_broker_amqp_integration_library_exists() {
 
     return isset($installed_libraries['phpamqp']) && file_exists($lib_path);
   }
-  
+
   return FALSE;
 }
 

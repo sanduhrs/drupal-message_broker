@@ -105,7 +105,7 @@ class DummyMessageBroker implements \IMessageBroker {
       drupal_set_message(t('Start consuming a message with "@consumer"',
               array('@consumer' => $queue_name)));
       call_user_func($consumer['callback'], $message, function() use(&$acked) {
-                $acked = TRUE;
+        $acked = TRUE;
       });
     } catch (InvalidMessageException $e) {
       if (!$acked) {
