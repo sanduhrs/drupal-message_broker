@@ -9,7 +9,7 @@
  * Represents the message broker, that may be implemented via AQMP or any
  * other protocol.
  */
-interface IMessageBroker {
+interface MessageBrokerInterface {
 
   /**
    * Sends a message to the message broker.

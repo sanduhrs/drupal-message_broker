@@ -63,8 +63,8 @@ function mymodule_log_invalid_message($message) {
  * Registers a message broker integration implementation.
  *
  * Describe the implementation via a title, description and a factoryMethod.
- * The latter one shall return an instance that implements the IMessageBroker
- * interface.
+ * The latter one shall return an instance that implements the
+ * MessageBrokerInterface.
  *
  * @return array
  *   Implementations.
@@ -80,7 +80,7 @@ function hook_message_broker_integration_implementation() {
 }
 
 /**
- * Creates an instance of the IMessageBroker.
+ * Creates an instance of the MessageBrokerInterface.
  *
  * @param array $consumers
  *   The registered consumers.
@@ -88,5 +88,5 @@ function hook_message_broker_integration_implementation() {
  *   Name of this drupal instance.
  */
 function mymodule_create_implementation($consumers, $self_name) {
-  // Return instance of IMessageBroker.
+  // Return instance of MessageBrokerInterface.
 }

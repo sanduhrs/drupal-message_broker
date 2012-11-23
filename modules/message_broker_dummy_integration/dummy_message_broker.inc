@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Dummy implementation of IMessageBroker.
+ * Dummy implementation of MessageBrokerInterface.
  */
 
 /**
- * Dummy implementation of the IMessageBroker interface.
+ * Dummy implementation of the MessageBrokerInterface.
  */
-class DummyMessageBroker implements \IMessageBroker {
+class DummyMessageBroker implements \MessageBrokerInterface {
 
   protected $consumers;
   protected $queues;

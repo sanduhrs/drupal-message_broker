@@ -8,10 +8,10 @@
 use \PhpAmqpLib\Connection\AMQPConnection;
 
 /**
- * Implementation of the IMessagebroker interface to integrate
+ * Implementation of the MessagebrokerInterface to integrate
  * an external AMQP message broker.
  */
-class AmqpMessageBroker implements \IMessageBroker {
+class AmqpMessageBroker implements \MessageBrokerInterface {
 
   /** @var \PhpAmqpLib\Connection\AMQPConnection  */
   protected $connection;

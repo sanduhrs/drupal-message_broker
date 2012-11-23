@@ -6,7 +6,7 @@
  */
 
 /**
- * Returns all known message broker integration implementatinons.
+ * Returns all known message broker integration implementations.
  *
  * @return array
  *   Infos about message broker implementations collected via the hook.
@@ -29,7 +29,7 @@ function _message_broker_integration_get_consumers() {
 /**
  * Returns the implementation of the message broker integration.
  *
- * @return IMessageBroker
+ * @return MessageBroker
  *   The message broker implementation.
  * @throws MessageBrokerException
  *   If no implementation is configured
@@ -50,7 +50,7 @@ function message_broker_integration_get() {
             _message_broker_integration_get_consumers(),
             variable_get('message_broker_integration_self', ''));
 
-    if (!$cached_implementation instanceof IMessageBroker) {
+    if (!$cached_implementation instanceof MessageBrokerInterface) {
       throw new MessageBrokerException('Creating the message broker integration implementation failed!');
     }
   }
