@@ -9,7 +9,7 @@
  * Represents a logger that outputs info and error strings while consuming
  * message broker messages.
  */
-interface IConsumerLogger {
+interface ConsumerLoggerInterface {
 
   /**
    * Logs an info message.

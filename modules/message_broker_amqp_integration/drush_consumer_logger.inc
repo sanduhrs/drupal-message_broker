@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Drush implementation of IConsumerLogger interface.
+ * Drush implementation of ConsumerLoggerInterface.
  */
 
 /**
  * DrushConsumerLogger that prints messages to the console.
  */
-class DrushConsumerLogger implements IConsumerLogger {
+class DrushConsumerLogger implements ConsumerLoggerInterface {
 
   /**
    * Logs an info message.

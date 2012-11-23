@@ -8,5 +8,5 @@ dependencies[] = xautoload
 dependencies[] = libraries
 dependencies[] = message_broker_integration
 configure = admin/config/system/message_broker_amqp_integration
-files[] = consumer_logger.inc
+files[] = consumer_logger_interface.inc
 files[] = drush_consumer_logger.inc

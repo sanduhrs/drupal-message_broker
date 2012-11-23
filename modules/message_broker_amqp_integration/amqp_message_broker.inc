@@ -218,14 +218,14 @@ class AmqpMessageBroker implements \MessageBrokerInterface {
    *   Name of the consumer.
    * @param int $count_messages_to_process
    *   Count of messages to consume.
-   * @param IConsumerLogger $logger
+   * @param ConsumerLoggerInterface $logger
    *   The logger to use.
    *
    * @return int
    *   Count consumed messages.
    */
   public function consumeMessages($consumer_name, $count_messages_to_process,
-          IConsumerLogger $logger) {
+          ConsumerLoggerInterface $logger) {
     $consumers = array();
 
     if (!empty($consumer_name)) {
