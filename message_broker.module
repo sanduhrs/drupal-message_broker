@@ -60,9 +60,6 @@ function message_broker_get() {
 
 /**
  * Implements hook_menu().
- *
- * @return array
- *   Registered menu entries.
  */
 function message_broker_menu() {
   $items = array();

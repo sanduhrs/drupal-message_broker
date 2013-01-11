@@ -7,9 +7,6 @@
 
 /**
  * Implements hook_drush_command().
- *
- * @return array
- *   Registered commands.
  */
 function message_broker_amqp_drush_command() {
   $items = array();
@@ -39,7 +36,7 @@ function message_broker_amqp_drush_command() {
  * @param string $consumer_name
  *   Name of consumer.
  *
- * @return boolean
+ * @return bool
  *   TRUE if command succeeded.
  */
 function drush_message_broker_amqp_consume_amqp_messages($consumer_name = '') {

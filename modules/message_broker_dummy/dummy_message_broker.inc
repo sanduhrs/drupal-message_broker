@@ -107,7 +107,8 @@ class DummyMessageBroker implements \MessageBrokerInterface {
       call_user_func($consumer['callback'], $message, function() use(&$acked) {
         $acked = TRUE;
       });
-    } catch (InvalidMessageException $e) {
+    }
+	catch (InvalidMessageException $e) {
       if (!$acked) {
         $acked = TRUE;
         watchdog_exception('dummy_message_broker', $e);
@@ -120,7 +121,8 @@ class DummyMessageBroker implements \MessageBrokerInterface {
       if (isset($consumer['invalidMessageHandler'])) {
         call_user_func($consumer['invalidMessageHandler'], $message);
       }
-    } catch (Exception $e) {
+    }
+	catch (Exception $e) {
       watchdog(WATCHDOG_ERROR, 'An exception was raised while consuming a ' .
               'message by the "' . $queue_name . '". Message: ' . $body);
       watchdog_exception('dummy_message_broker', $e);
@@ -143,7 +145,7 @@ class DummyMessageBroker implements \MessageBrokerInterface {
    * @param string $pattern
    *   Routing pattern.
    *
-   * @return boolean
+   * @return bool
    *   TRUE if routing key matches the given pattern.
    * @throws MessageBrokerException
    */
