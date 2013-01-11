@@ -101,7 +101,7 @@ function message_broker_example_message_broker_consumers($self_name) {
         drush_print('Hello world, ' . $message->name);
       }
       else {
-        drupal_set_message('Hello world, ' . $message->name);
+        drupal_set_message(t('Hello world, @name.', array('@name' => $message->name)));
       }
 
       $ack();
@@ -110,7 +110,7 @@ function message_broker_example_message_broker_consumers($self_name) {
         drush_print('Invalid message handler was executed.');
       }
       else {
-        drupal_set_message('Invalid message handler was executed.', 'warning');
+        drupal_set_message(t('Invalid message handler was executed.'), 'warning');
       }
     });
 
@@ -139,7 +139,7 @@ function _message_broker_example_special_hello_world($message,
     drush_print('A special hello to ' . $message->name . '!');
   }
   else {
-    drupal_set_message('A special hello to ' . $message->name . '!');
+    drupal_set_message(t('A special hello to @name!', array('@name' => $message->name)));
   }
 
   $ack();
