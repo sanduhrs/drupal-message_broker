@@ -1,8 +1,0 @@
-core = 7.x
-
-name = Message Broker Dummy Integration
-description = A message broker integration that consumes all messages synchronously
-php = 5.3
-package = "Messagebroker"
-dependencies[] = message_broker_integration
-configure = admin/config/system/message_broker_dummy_integration

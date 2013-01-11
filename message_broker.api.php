@@ -60,7 +60,7 @@ function mymodule_log_invalid_message($message) {
 }
 
 /**
- * Registers a message broker integration implementation.
+ * Registers a message broker implementation.
  *
  * Describe the implementation via a title, description and a factoryMethod.
  * The latter one shall return an instance that implements the
@@ -69,7 +69,7 @@ function mymodule_log_invalid_message($message) {
  * @return array
  *   Implementations.
  */
-function hook_message_broker_integration_implementation() {
+function hook_message_broker_implementation() {
   $implementations = array();
 
   $implementations['foo'] = array(

@@ -13,7 +13,7 @@ class MessageBrokerException extends Exception {
 
 /**
  * An exception a consumer should throw to indicate that a message is invalid.
- * This message broker integration module will catch the exception, ack the
+ * This message broker module will catch the exception, ack the
  * message and call a invalidMessageHandler.
  */
 class InvalidMessageException extends Exception {

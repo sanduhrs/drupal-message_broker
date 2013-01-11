@@ -1,0 +1,8 @@
+core = 7.x
+
+name = Message Broker Dummy Implementation
+description = A message broker implementation that consumes all messages synchronously - useful for testing
+php = 5.3
+package = "Messagebroker"
+dependencies[] = message_broker
+configure = admin/config/system/message_broker_dummy

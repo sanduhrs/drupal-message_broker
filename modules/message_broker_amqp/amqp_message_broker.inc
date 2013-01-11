@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Message broker integration implementation that uses AMQP.
+ * Message broker implementation that uses AMQP.
  */
 
 use \PhpAmqpLib\Connection\AMQPConnection;

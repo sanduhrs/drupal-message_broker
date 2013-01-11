@@ -8,13 +8,13 @@
 /**
  * Implements hook_uninstall().
  */
-function message_broker_amqp_integration_uninstall() {
-  variable_del('message_broker_amqp_integration_host');
-  variable_del('message_broker_amqp_integration_port');
-  variable_del('message_broker_amqp_integration_username');
-  variable_del('message_broker_amqp_integration_password');
-  variable_del('message_broker_amqp_integration_vhost');
-  variable_del('message_broker_amqp_integration_config');
+function message_broker_amqp_uninstall() {
+  variable_del('message_broker_amqp_host');
+  variable_del('message_broker_amqp_port');
+  variable_del('message_broker_amqp_username');
+  variable_del('message_broker_amqp_password');
+  variable_del('message_broker_amqp_vhost');
+  variable_del('message_broker_amqp_config');
 }
 
 /**
@@ -23,7 +23,7 @@ function message_broker_amqp_integration_uninstall() {
  * @return bool
  *   TRUE if library is installed correctly.
  */
-function _message_broker_amqp_integration_library_exists() {
+function _message_broker_amqp_library_exists() {
   if (function_exists('libraries_get_libraries')) {
     $installed_libraries = libraries_get_libraries();
     $lib_path = libraries_get_path('phpamqp') . DIRECTORY_SEPARATOR . 'PhpAmqpLib';
@@ -35,10 +35,10 @@ function _message_broker_amqp_integration_library_exists() {
 }
 
 /**
- * Implements hook_eanble().
+ * Implements hook_enable().
  */
-function message_broker_amqp_integration_enable() {
-  if (!_message_broker_amqp_integration_library_exists()) {
+function message_broker_amqp_enable() {
+  if (!_message_broker_amqp_library_exists()) {
     drupal_set_message(t('You need to install the PHP AMQP library. See your !status_report for more details!', array('!status_report' => l('status report', 'admin/reports/status'))), 'warning');
   }
 }
@@ -52,7 +52,7 @@ function message_broker_amqp_integration_enable() {
  * @return array
  *   Calculated requirements.
  */
-function message_broker_amqp_integration_requirements($phase) {
+function message_broker_amqp_requirements($phase) {
   $requirements = array();
   $t = get_t();
 
@@ -60,7 +60,7 @@ function message_broker_amqp_integration_requirements($phase) {
     $requirements['phpamqp_library']['title'] = $t('PHP AMQP Library');
     $requirements['phpamqp_library']['description'] = $t('The library needed to connect to an AMQP compliant message broker server.');
 
-    if (_message_broker_amqp_integration_library_exists()) {
+    if (_message_broker_amqp_library_exists()) {
       $requirements['phpamqp_library']['value'] = $t('Installed');
       $requirements['phpamqp_library']['severity'] = REQUIREMENT_OK;
     }

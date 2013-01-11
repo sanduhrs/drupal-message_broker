@@ -8,14 +8,14 @@
 /**
  * Implements hook_menu().
  */
-function message_broker_integration_example_menu() {
+function message_broker_example_menu() {
   $items = array();
 
-  $items['admin/config/system/message_broker_integration_example'] = array(
-    'title' => 'Message broker integration example',
-    'description' => 'A small hello world example that demonstrates the message broker integration',
+  $items['admin/config/system/message_broker_example'] = array(
+    'title' => 'Message broker usage example',
+    'description' => 'A small hello world example that demonstrates the message broker api',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('message_broker_integration_example_form'),
+    'page arguments' => array('message_broker_example_form'),
     'type' => MENU_NORMAL_ITEM,
     'access arguments' => array('administer site configuration'),
   );
@@ -34,7 +34,7 @@ function message_broker_integration_example_menu() {
  * @return array
  *   Example form.
  */
-function message_broker_integration_example_form($form, &$form_state) {
+function message_broker_example_form($form, &$form_state) {
   $form['title'] = array(
     '#markup' => '<h2>' . t('Hello world example') . '</h2>');
   $form['intro'] = array(
@@ -66,8 +66,8 @@ function message_broker_integration_example_form($form, &$form_state) {
  * @param array $form_state
  *   Form state.
  */
-function message_broker_integration_example_form_submit(&$form, &$form_state) {
-  $broker = message_broker_integration_get();
+function message_broker_example_form_submit(&$form, &$form_state) {
+  $broker = message_broker_get();
   $message = new stdClass();
   $message->name = $form_state['values']['name'];
 
@@ -84,7 +84,7 @@ function message_broker_integration_example_form_submit(&$form, &$form_state) {
  * @return array
  *   Example consumers.
  */
-function message_broker_integration_example_message_broker_consumers($self_name) {
+function message_broker_example_message_broker_consumers($self_name) {
   $consumers = array();
 
   // An example consumer implemented using a closure.
@@ -118,7 +118,7 @@ function message_broker_integration_example_message_broker_consumers($self_name)
   // example_config.json to understand why (look at the routing keys).
   $consumers['specialHelloWorld'] = array(
     'queue' => 'helloWorldForDrupal',
-    'callback' => '_message_broker_integration_example_special_hello_world');
+    'callback' => '_message_broker_example_special_hello_world');
 
   return $consumers;
 }
@@ -131,7 +131,7 @@ function message_broker_integration_example_message_broker_consumers($self_name)
  * @param \Closure $ack
  *   Ack method.
  */
-function _message_broker_integration_example_special_hello_world($message,
+function _message_broker_example_special_hello_world($message,
         \Closure $ack) {
   $message = json_decode($message->body);
 
