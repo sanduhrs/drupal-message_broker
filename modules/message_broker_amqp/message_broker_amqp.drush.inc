@@ -26,8 +26,40 @@ function message_broker_amqp_drush_command() {
       'drush cons' => 'Starts alls consumers and consumes all messages forever',
     ),
   );
+  
+  $items['list-amqp-consumers'] = array(
+    'description' => 'Lists all AMQP message consumers',
+    'bootstrap' => DRUSH_BOOTSTRAP_FULL,
+  );
 
   return $items;
+}
+
+/**
+ * Implements the drush command "list-amqp-consumers". 
+ */
+function drush_message_broker_amqp_list_amqp_consumers() {
+  try {
+    $broker = message_broker_get();
+  } catch (MessageBrokerException $e) {
+    return drush_print(dt('Error: The message broker is not properly configured. Wrong credentials or host/port? Please visit admin/config/system/message_broker, details: ') . $e->getMessage());
+  }
+
+  if (!$broker instanceof AmqpMessageBroker) {
+    return drush_print(dt('Error: This drush command only works if you set the message broker configuration to AMQP. Please visit admin/config/system/message_broker'));
+  }
+  
+  $consumers = $broker->getConsumers();
+  $count_consumers = !empty($consumers) ? count($consumers) : 0;
+  drush_print(dt("There are @count registered consumers.", array('@count' => $count_consumers)));
+  
+  if (!empty($consumers)) {
+    foreach ($consumers as $consumer_name => $consumer_info) {
+      drush_print(dt("Consumer '@name' listens to queue '@queue'", array('@name' => $consumer_name, '@queue' => $consumer_info['queue'])));
+    }
+  }
+  
+  return TRUE;
 }
 
 /**
