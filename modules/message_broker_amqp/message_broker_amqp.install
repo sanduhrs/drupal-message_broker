@@ -41,6 +41,29 @@ function message_broker_amqp_enable() {
   if (!_message_broker_amqp_library_exists()) {
     drupal_set_message(t('You need to install the PHP AMQP library. See your !status_report for more details!', array('!status_report' => l('status report', 'admin/reports/status'))), 'warning');
   }
+  
+  $old_variables_found = FALSE;
+  $variable_names = array(
+      'message_broker_amqp_integration_host' => 'message_broker_amqp_host',
+      'message_broker_amqp_integration_port' => 'message_broker_amqp_port',
+      'message_broker_amqp_integration_username' => 'message_broker_amqp_username',
+      'message_broker_amqp_integration_password' => 'message_broker_amqp_password',
+      'message_broker_amqp_integration_vhost' => 'message_broker_amqp_vhost',
+      'message_broker_amqp_integration_config' => 'message_broker_amqp_config'
+  );
+  
+  foreach ($variable_names as $old_name => $new_name) {
+    $variable_value = variable_get($old_name);
+    
+    if ($variable_value !== NULL) {
+      $old_variables_found = TRUE;
+      variable_set($new_name, $variable_value);
+    }
+  }
+  
+  if ($old_variables_found) {
+    drupal_set_message(t('Old configuration data from the module message_broker_amqp_integration was found and migrated!'));
+  }
 }
 
 /**
