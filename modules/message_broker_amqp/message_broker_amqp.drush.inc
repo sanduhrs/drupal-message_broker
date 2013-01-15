@@ -55,7 +55,7 @@ function drush_message_broker_amqp_list_amqp_consumers() {
   
   if (!empty($consumers)) {
     foreach ($consumers as $consumer_name => $consumer_info) {
-      drush_print(dt("Consumer '@name' listens to queue '@queue'", array('@name' => $consumer_name, '@queue' => $consumer_info['queue'])));
+      drush_print(dt("'@name' -> '@queue'", array('@name' => $consumer_name, '@queue' => $consumer_info['queue'])));
     }
   }
   
