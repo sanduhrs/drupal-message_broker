@@ -108,7 +108,7 @@ class DummyMessageBroker implements \MessageBrokerInterface {
         $acked = TRUE;
       });
     }
-	catch (InvalidMessageException $e) {
+    catch (InvalidMessageException $e) {
       if (!$acked) {
         $acked = TRUE;
         watchdog_exception('dummy_message_broker', $e);
@@ -122,7 +122,7 @@ class DummyMessageBroker implements \MessageBrokerInterface {
         call_user_func($consumer['invalidMessageHandler'], $message);
       }
     }
-	catch (Exception $e) {
+    catch (Exception $e) {
       watchdog(WATCHDOG_ERROR, 'An exception was raised while consuming a ' .
               'message by the "' . $queue_name . '". Message: ' . $body);
       watchdog_exception('dummy_message_broker', $e);

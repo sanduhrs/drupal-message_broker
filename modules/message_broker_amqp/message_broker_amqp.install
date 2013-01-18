@@ -68,12 +68,6 @@ function message_broker_amqp_enable() {
 
 /**
  * Implements hook_requirements().
- *
- * @param string $phase
- *   Phase.
- *
- * @return array
- *   Calculated requirements.
  */
 function message_broker_amqp_requirements($phase) {
   $requirements = array();

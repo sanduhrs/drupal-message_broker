@@ -41,7 +41,8 @@ function message_broker_amqp_drush_command() {
 function drush_message_broker_amqp_list_amqp_consumers() {
   try {
     $broker = message_broker_get();
-  } catch (MessageBrokerException $e) {
+  }
+  catch (MessageBrokerException $e) {
     return drush_print(dt('Error: The message broker is not properly configured. Wrong credentials or host/port? Please visit admin/config/system/message_broker, details: ') . $e->getMessage());
   }
 
