@@ -211,11 +211,12 @@ class AmqpMessageBroker implements \MessageBrokerInterface {
   public function consumerExists($consumer_name) {
     return !empty($this->consumers[$consumer_name]);
   }
-  
+
   /**
    * Gets all registered consumers.
    *
    * @return array
+   *   All consumers.
    */
   public function getConsumers() {
     return $this->consumers;

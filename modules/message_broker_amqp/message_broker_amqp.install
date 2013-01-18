@@ -49,18 +49,18 @@ function message_broker_amqp_enable() {
       'message_broker_amqp_integration_username' => 'message_broker_amqp_username',
       'message_broker_amqp_integration_password' => 'message_broker_amqp_password',
       'message_broker_amqp_integration_vhost' => 'message_broker_amqp_vhost',
-      'message_broker_amqp_integration_config' => 'message_broker_amqp_config'
+      'message_broker_amqp_integration_config' => 'message_broker_amqp_config',
   );
-  
+
   foreach ($variable_names as $old_name => $new_name) {
     $variable_value = variable_get($old_name);
-    
+
     if ($variable_value !== NULL) {
       $old_variables_found = TRUE;
       variable_set($new_name, $variable_value);
     }
   }
-  
+
   if ($old_variables_found) {
     drupal_set_message(t('Old configuration data from the module message_broker_amqp_integration was found and migrated!'));
   }
