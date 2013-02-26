@@ -223,6 +223,16 @@ class AmqpMessageBroker implements \MessageBrokerInterface {
   }
 
   /**
+   * Ensures a specific quality of service.
+   *
+   * @param int $prefetch_count Count of messages to prefetch into memory.
+   * @param int $prefetch_size Optional, maximum size of prefetched messages.
+   */
+  public function ensureQualityOfService($prefetch_count, $prefetch_size = 0) {
+      $this->channel->basic_qos($prefetch_size, $prefetch_count, FALSE);
+  }
+
+  /**
    * Consumes messages with all or only the specified consumer.
    *
    * @param string $consumer_name

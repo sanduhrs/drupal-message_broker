@@ -17,18 +17,19 @@ function message_broker_amqp_drush_command() {
       'consumer' => 'The consumer to start, if not specified, the command will start all consumers',
     ),
     'options' => array(
-      'count-messages' => 'Consume the given count of messages, blocks until finished',
+      'count-messages' => 'Consume the given amount of messages, blocks until finished',
+      'prefetch-count' => 'Count of messages to prefetch into memory from AMQP server',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_FULL,
     'aliases' => array('cons'),
     'examples' => array(
-      'drush consume-amqp-messages helloWorldToEveryone --count-messages=10' => 'Consumes 10 messages for the consumer "helloWorldToEveryone"',
-      'drush cons' => 'Starts alls consumers and consumes all messages forever',
+      'drush consume-amqp-messages helloWorldToEveryone --count-messages=10' => 'Consumes 10 messages using the consumer "helloWorldToEveryone"',
+      'drush cons' => 'Starts alls consumers and runs them forever',
     ),
   );
 
   $items['list-amqp-consumers'] = array(
-    'description' => 'Lists all AMQP message consumers',
+    'description' => 'Lists all enabled AMQP message consumers',
     'bootstrap' => DRUSH_BOOTSTRAP_FULL,
   );
 
@@ -87,6 +88,13 @@ function drush_message_broker_amqp_consume_amqp_messages($consumer_name = '') {
   $message_broker_host = variable_get('message_broker_amqp_host', 'localhost');
   $message_broker_port = variable_get('message_broker_amqp_port', '5672');
   drush_print(dt('Connected successfully to the AMQP message broker at ') . $message_broker_host . ':' . $message_broker_port);
+
+  $prefetch_count = (int)drush_get_option('prefetch-count', 0);
+
+  if ($prefetch_count > 0) {
+      $broker->ensureQualityOfService($prefetch_count);
+      drush_print(dt('Prefetch count for current channel was set to @prefetch messages', array('@prefetch' => $prefetch_count)));
+  }
 
   if (empty($consumer_name)) {
     drush_print(dt('Starting all consumers ...'));
