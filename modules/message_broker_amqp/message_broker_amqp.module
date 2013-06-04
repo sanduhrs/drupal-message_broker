@@ -48,6 +48,12 @@ function _message_broker_amqp_collect_params() {
   $params['password'] = variable_get('message_broker_amqp_password', 'guest');
   $params['vhost'] = variable_get('message_broker_amqp_vhost', "/");
 
+  $params['use_ssl'] = variable_get('message_broker_amqp_use_ssl', FALSE);
+  $params['ssloptions'] = array();
+  $params['ssloptions']['cafile'] = variable_get('message_broker_amqp_cafile', "");
+  $params['ssloptions']['local_cert'] = variable_get('message_broker_amqp_local_cert', "");
+  $params['ssloptions']['verify_peer'] = variable_get('message_broker_amqp_verify_peer', "");
+
   $config_path = variable_get('message_broker_amqp_config', '');
 
   if (empty($config_path)) {
@@ -121,46 +127,101 @@ function message_broker_amqp_menu() {
  *   Settings form.
  */
 function message_broker_amqp_settings($form, &$form_state) {
-  $form['intro'] = array('#markup' => '<p>' . t('Enter host and credentials for the AMQP compliant message broker you want to use.') . '</p>');
+  $form['message_broker_amqp_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('AMQP server settings'),
+    '#collapsible' => FALSE,
+    '#collapsed' => FALSE,
+  );
 
-  $form['message_broker_amqp_host'] = array(
+  $form['message_broker_amqp_settings']['intro'] = array('#markup' => '<p>' . t('Enter host and credentials for the AMQP compliant message broker you want to use.') . '</p>');
+
+  $form['message_broker_amqp_settings']['message_broker_amqp_host'] = array(
     '#type' => 'textfield',
     '#title' => t('Host'),
     '#default_value' => variable_get('message_broker_amqp_host', 'localhost'),
   );
 
-  $form['message_broker_amqp_port'] = array(
+  $form['message_broker_amqp_settings']['message_broker_amqp_port'] = array(
     '#type' => 'textfield',
     '#title' => t('Port'),
     '#default_value' => variable_get('message_broker_amqp_port', '5672'),
   );
 
-  $form['message_broker_amqp_vhost'] = array(
+  $form['message_broker_amqp_settings']['message_broker_amqp_vhost'] = array(
     '#type' => 'textfield',
     '#title' => t('Vhost'),
     '#default_value' => variable_get('message_broker_amqp_vhost', "/"),
   );
 
-  $form['message_broker_amqp_username'] = array(
+  $form['message_broker_amqp_settings']['message_broker_amqp_username'] = array(
     '#type' => 'textfield',
     '#title' => t('Username'),
     '#default_value' => variable_get('message_broker_amqp_username', 'guest'),
   );
 
-  $form['message_broker_amqp_password'] = array(
+  $form['message_broker_amqp_settings']['message_broker_amqp_password'] = array(
     '#type' => 'textfield',
     '#title' => t('Password'),
     '#default_value' => variable_get('message_broker_amqp_password', 'guest'),
   );
 
-  $form['config_intro'] = array('#markup' => '<p>' . t('Specify the path to the message broker configuration file which contains the definitions for all exchanges and queues.') . '</p>');
+  $form['message_broker_amqp_settings']['config_intro'] = array('#markup' => '<p>' . t('Specify the path to the message broker configuration file which contains the definitions for all exchanges and queues.') . '</p>');
 
-  $form['message_broker_amqp_config'] = array(
+  $form['message_broker_amqp_settings']['message_broker_amqp_config'] = array(
     '#type' => 'textfield',
     '#title' => t('Path to json configuration file'),
+    '#required' => TRUE,
     '#default_value' => variable_get('message_broker_amqp_config', ''),
   );
 
+  $form['message_broker_amqp_use_ssl'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use SSL for connection'),
+    '#default_value' => variable_get('message_broker_amqp_use_ssl', '0'),
+  );
+
+  $form['message_broker_ampq_ssl'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('SSL settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+    '#states' => array(
+      'visible' => array(
+        ':input[name="message_broker_amqp_use_ssl"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  $form['message_broker_ampq_ssl']['message_broker_amqp_cafile'] = array(
+    '#type' => 'textfield',
+    '#title' => t('CA file'),
+    '#states' => array(
+      'required' => array(
+        ':input[name="message_broker_amqp_use_ssl"]' => array('checked' => TRUE),
+      ),
+    ),
+    '#description' => t("Please enter location of Certificate Authority file on local filesystem. For example (/etc/ssl/certs/cacert.org.pem)"),
+    '#default_value' => variable_get('message_broker_amqp_cafile', ''),
+  );
+
+  $form['message_broker_ampq_ssl']['message_broker_amqp_local_cert'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Local cert file'),
+    '#states' => array(
+      'required' => array(
+        ':input[name="message_broker_amqp_use_ssl"]' => array('checked' => TRUE),
+      ),
+    ),
+    '#description' => t("Path to local certificate file on filesystem. It must be a PEM encoded file which contains your certificate and private key."),
+    '#default_value' => variable_get('message_broker_amqp_local_cert', ''),
+  );
+
+  $form['message_broker_ampq_ssl']['message_broker_amqp_verify_peer'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Verify peer'),
+    '#default_value' => variable_get('message_broker_amqp_verify_peer', '1'),
+  );
   return system_settings_form($form);
 }
 
@@ -175,15 +236,31 @@ function message_broker_amqp_settings($form, &$form_state) {
 function message_broker_amqp_settings_validate($form, &$form_state) {
   if (!empty($form_state['values']['message_broker_amqp_config'])) {
     if (!file_exists($form_state['values']['message_broker_amqp_config'])) {
-      form_set_error('message_broker_amqp_config', t('The json file was not found, please check the path.'));
-      return;
+      form_set_error('message_broker_amqp_config', t('The JSON file was not found, please check the path.'));
+    }
+    else {
+      $config_file = file_get_contents($form_state['values']['message_broker_amqp_config']);
+      $config = json_decode($config_file, TRUE);
+
+      if ($config === NULL) {
+        form_set_error('message_broker_amqp_config', t('The JSON file was not parsed successfully.'));
+      }
+    }
+  }
+
+  if ($form_state['values']['message_broker_amqp_use_ssl'] == "1") {
+    if (empty($form_state['values']['message_broker_amqp_cafile'])) {
+      form_set_error('message_broker_amqp_cafile', t('Location of Certificate Authority file is required.'));
+    }
+    elseif (!file_exists($form_state['values']['message_broker_amqp_cafile'])) {
+      form_set_error('message_broker_amqp_cafile', t('The Certificate Authority file was not found, please check the path.'));
     }
 
-    $config_file = file_get_contents($form_state['values']['message_broker_amqp_config']);
-    $config = json_decode($config_file, TRUE);
-
-    if ($config === NULL) {
-      form_set_error('message_broker_amqp_config', t('The JSON file was not parsed successfully.'));
+    if (empty($form_state['values']['message_broker_amqp_local_cert'])) {
+      form_set_error('message_broker_amqp_local_cert', t('Location of local certificate file is required.'));
+    }
+    elseif (!file_exists($form_state['values']['message_broker_amqp_local_cert'])) {
+      form_set_error('message_broker_amqp_local_cert', t('The local certificate file was not found, please check the path.'));
     }
   }
 }

@@ -5,8 +5,6 @@
  * Message broker implementation that uses AMQP.
  */
 
-use \PhpAmqpLib\Connection\AMQPConnection;
-
 /**
  * Implementation of the MessagebrokerInterface to integrate
  * an external AMQP message broker.
@@ -48,8 +46,16 @@ class AmqpMessageBroker implements \MessageBrokerInterface {
    */
   protected function init(array $params) {
     try {
-      $this->connection = new AMQPConnection($params['host'], $params['port'],
+      if ($params['use_ssl']) {
+        $this->connection = new \PhpAmqpLib\Connection\AMQPSSLConnection($params['host'],
+              $params['port'], $params['username'], $params['password'],
+              $params['vhost'], $params['ssloptions']);
+      }
+      else {
+        $this->connection = new \PhpAmqpLib\Connection\AMQPConnection($params['host'], $params['port'],
               $params['username'], $params['password'], $params['vhost']);
+      }
+
       $this->channel = $this->connection->channel(NULL);
 
       $this->declareExchanges($params['config']['exchanges']);
