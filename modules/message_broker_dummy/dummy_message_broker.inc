@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__) . '/../../message_broker_interface.inc';
+
 /**
  * @file
  * Dummy implementation of MessageBrokerInterface.
@@ -8,7 +10,7 @@
 /**
  * Dummy implementation of the MessageBrokerInterface.
  */
-class DummyMessageBroker implements \MessageBrokerInterface {
+class DummyMessageBroker implements MessageBrokerInterface {
 
   protected $consumers;
   protected $queues;

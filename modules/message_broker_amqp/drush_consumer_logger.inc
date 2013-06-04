@@ -1,5 +1,7 @@
 <?php
 
+require_once 'consumer_logger_interface.inc';
+
 /**
  * @file
  * Drush implementation of ConsumerLoggerInterface.

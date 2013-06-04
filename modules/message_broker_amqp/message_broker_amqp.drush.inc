@@ -1,5 +1,9 @@
 <?php
 
+require_once 'amqp_message_broker.inc';
+require_once dirname(__FILE__) . '/../../message_broker_interface.inc';
+require_once dirname(__FILE__) . '/../../message_broker_exception.inc';
+
 /**
  * @file
  * Drush command for consuming AMQP messages.

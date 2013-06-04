@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__) . '/../../message_broker_interface.inc';
+
 /**
  * @file
  * Message broker implementation that uses AMQP.
@@ -11,7 +13,7 @@ use \PhpAmqpLib\Connection\AMQPConnection;
  * Implementation of the MessagebrokerInterface to integrate
  * an external AMQP message broker.
  */
-class AmqpMessageBroker implements \MessageBrokerInterface {
+class AmqpMessageBroker implements MessageBrokerInterface {
 
   /** @var \PhpAmqpLib\Connection\AMQPConnection  */
   protected $connection;
