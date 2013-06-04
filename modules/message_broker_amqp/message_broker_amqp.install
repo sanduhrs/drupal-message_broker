@@ -15,6 +15,10 @@ function message_broker_amqp_uninstall() {
   variable_del('message_broker_amqp_password');
   variable_del('message_broker_amqp_vhost');
   variable_del('message_broker_amqp_config');
+  variable_del('message_broker_amqp_use_ssl');
+  variable_del('message_broker_amqp_cafile');
+  variable_del('message_broker_amqp_local_cert');
+  variable_del('message_broker_amqp_verify_peer');
 }
 
 /**
@@ -41,7 +45,7 @@ function message_broker_amqp_enable() {
   if (!_message_broker_amqp_library_exists()) {
     drupal_set_message(t('You need to install the PHP AMQP library. See your !status_report for more details!', array('!status_report' => l('status report', 'admin/reports/status'))), 'warning');
   }
-  
+
   $old_variables_found = FALSE;
   $variable_names = array(
       'message_broker_amqp_integration_host' => 'message_broker_amqp_host',
