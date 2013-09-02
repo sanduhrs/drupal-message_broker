@@ -287,10 +287,12 @@ class AmqpMessageBroker implements MessageBrokerInterface {
         try {
           call_user_func($consumer_infos['callback'], $message,
             function() use ($message, $logger, $name, &$count_messages, &$acked) {
-              $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
-              $acked = TRUE;
-              $count_messages++;
-              $logger->logInfo("Message was processed successfully\n");
+              if (!$acked) {
+                $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
+                $acked = TRUE;
+                $count_messages++;
+                $logger->logInfo("Message was processed successfully\n");
+              }
             });
         }
         catch (InvalidMessageException $e) {
