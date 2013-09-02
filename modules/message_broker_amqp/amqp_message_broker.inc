@@ -306,14 +306,14 @@ class AmqpMessageBroker implements MessageBrokerInterface {
         }
         catch (CriticalErrorException $e) {
           $logger->logError("An critical exception was raised while consuming a message. Consumer will quit. Exception of type \"" . get_class($e) . "\": " . $e->getMessage() . "\nstacktrace: " . $e->getTraceAsString() . "\n");
-          watchdog('amqp_message_broker', 'An critical exception was raised while consuming a message by the "' . $consumer_name . '". Message: ' . print_r($message, 1));
+          watchdog('amqp_message_broker', 'An critical exception was raised while consuming a message by the "' . $consumer_name . '". Message: ' . print_r($message, 1), array(), WATCHDOG_CRITICAL);
           watchdog_exception('amqp_message_broker', $e);
 
           die(1);
         }
         catch (Exception $e) {
           $logger->logError("An exception was raised while consuming a message. Exception of type \"" . get_class($e) . "\": " . $e->getMessage() . "\nstacktrace: " . $e->getTraceAsString() . "\n");
-          watchdog('amqp_message_broker', 'An exception was raised while consuming a message by the "' . $consumer_name . '". Message: ' . print_r($message, 1));
+          watchdog('amqp_message_broker', 'An exception was raised while consuming a message by the "' . $consumer_name . '". Message: ' . print_r($message, 1), array(), WATCHDOG_ERROR);
           watchdog_exception('amqp_message_broker', $e);
         }
 
@@ -347,7 +347,7 @@ class AmqpMessageBroker implements MessageBrokerInterface {
       call_user_func($consumer_infos['invalidMessageHandler'], $message);
     }
     else {
-      watchdog('amqp_message_broker', 'Invalid message, body:' . $message->body);
+      watchdog('amqp_message_broker', 'Invalid message, body:' . $message->body, array(), WATCHDOG_NOTICE);
     }
   }
 
