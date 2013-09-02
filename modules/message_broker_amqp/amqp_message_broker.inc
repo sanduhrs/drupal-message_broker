@@ -303,7 +303,7 @@ class AmqpMessageBroker implements MessageBrokerInterface {
             $logger->logInfo("Invalid message was acked\n");
           }
 
-          $that->handleInvalidMessage($message, $consumer_infos);
+          $that->handleInvalidMessage($message, $consumer_infos, $e);
         }
         catch (CriticalErrorException $e) {
           $logger->logError("An critical exception was raised while consuming a message. Consumer will quit. Exception of type \"" . get_class($e) . "\": " . $e->getMessage() . "\nstacktrace: " . $e->getTraceAsString() . "\n");
@@ -343,11 +343,12 @@ class AmqpMessageBroker implements MessageBrokerInterface {
    * @param array $consumer_infos
    *   Infos about consumer.
    */
-  public function handleInvalidMessage($message, $consumer_infos) {
+  public function handleInvalidMessage($message, $consumer_infos, InvalidMessageException $invalid_message_exception) {
     if (isset($consumer_infos['invalidMessageHandler'])) {
-      call_user_func($consumer_infos['invalidMessageHandler'], $message);
+      call_user_func($consumer_infos['invalidMessageHandler'], $message, $invalid_message_exception);
     }
     else {
+      watchdog_exception('amqp_message_broker', $invalid_message_exception);
       watchdog('amqp_message_broker', 'Invalid message, body:' . $message->body, array(), WATCHDOG_NOTICE);
     }
   }

@@ -54,8 +54,11 @@ function mymodule_consume_message($message, $ack) {
  *
  * @param mixed $message
  *   Invalid message.
+ *
+ * @param InvalidMessageException $invalid_message_exception
+ *   The exception that was raised.
  */
-function mymodule_log_invalid_message($message) {
+function mymodule_log_invalid_message($message, InvalidMessageException $invalid_message_exception) {
   // Log message for instance to a file.
 }
 

@@ -121,7 +121,7 @@ class DummyMessageBroker implements MessageBrokerInterface {
       $invalid_message = TRUE;
 
       if (isset($consumer['invalidMessageHandler'])) {
-        call_user_func($consumer['invalidMessageHandler'], $message);
+        call_user_func($consumer['invalidMessageHandler'], $message, $e);
       }
     }
     catch (Exception $e) {
