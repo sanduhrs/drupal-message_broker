@@ -299,6 +299,7 @@ class AmqpMessageBroker implements MessageBrokerInterface {
           if (!$acked) {
             $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
             $acked = TRUE;
+            $count_messages++;
             $logger->logInfo("Invalid message was acked\n");
           }
 
