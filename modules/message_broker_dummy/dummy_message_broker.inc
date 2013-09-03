@@ -126,12 +126,15 @@ class DummyMessageBroker implements MessageBrokerInterface {
     }
     catch (Exception $e) {
       watchdog(WATCHDOG_ERROR, 'An exception was raised while consuming a ' .
-              'message by the "' . $queue_name . '". Message: ' . $body);
+              'message by the "!queue". Message: !message',
+              array('!queue' => $queue_name, '!message' => $body));
       watchdog_exception('dummy_message_broker', $e);
     }
 
     if (!$acked) {
-      watchdog('dummy_message_broker', 'A message was not processed successfully, because it was not acked by the consumer "' . $queue_name . '"! Message: ' . $body);
+      watchdog('dummy_message_broker', 'A message was not processed successfully,' .
+               'because it was not acked by the consumer "!queue"! Message: !message',
+          array('!queue' => $queue_name, '!message' => $body));
       drupal_set_message(t('A message was not processed successfully, it was not acked by the consumer "@consumer"', array('@consumer' => $queue_name)), 'warning');
     }
     elseif (!$invalid_message) {
