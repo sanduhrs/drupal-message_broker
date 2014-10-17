@@ -20,7 +20,7 @@ class InvalidMessageException extends Exception {
 }
 
 /**
- * An exception a consumers should throw to indicate a critical
+ * An exception a consumer should throw to indicate a critical
  * error. This means that application is not able
  * to proceed at this state.
  * The message broker infrastructure catches these exceptions,
