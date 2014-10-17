@@ -280,7 +280,7 @@ class AmqpMessageBroker implements MessageBrokerInterface {
       $that = $this;
       $this->channel->basic_consume($consumer_infos['queue'], $name, FALSE,
       FALSE, FALSE, FALSE,
-      function($message) use($consumer_infos, $logger, $name, &$count_messages, $that) {
+      function($message) use($consumer_infos, $logger, $name, &$count_messages, $consumer_name, $that) {
         $logger->logInfo('Process message with consumer "' . $name . '"');
         $acked = FALSE;
 
