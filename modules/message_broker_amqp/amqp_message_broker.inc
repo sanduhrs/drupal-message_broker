@@ -313,6 +313,12 @@ class AmqpMessageBroker implements MessageBrokerInterface {
 
           die(1);
         }
+        catch (NackException $e) {
+          $message->delivery_info['channel']->basic_nack($message->delivery_info['delivery_tag']);
+          $acked = TRUE;
+          $count_messages++;
+          $logger->logInfo("Message was successfully nacked\n");
+        }
         catch (Exception $e) {
           $logger->logError("An exception was raised while consuming a message. Exception of type \"" . get_class($e) . "\": " . $e->getMessage() . "\nstacktrace: " . $e->getTraceAsString() . "\n");
           watchdog('amqp_message_broker', 'An exception was raised while consuming a message by the "!consumer". Message: !message', 
