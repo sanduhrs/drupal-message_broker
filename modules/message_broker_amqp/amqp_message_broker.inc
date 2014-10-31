@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/../../message_broker_interface.inc';
+require_once 'message_broker_amqp_exception.inc';
 
 /**
  * @file
