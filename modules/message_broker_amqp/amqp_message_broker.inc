@@ -111,6 +111,15 @@ class AmqpMessageBroker implements MessageBrokerInterface {
    *
    * @param array $queues
    *   Queues to declare.
+   * a queue can have the following elements:
+   *
+   *    'passive'       => boolean Default FALSE
+   *    'durable'       => boolean Default FALSE
+   *    'nowait'        => boolean Default FALSE
+   *    'exclusive'     => boolean Default FALSE
+   *    'auto_delete'   => boolean Default TRUE
+   *    'arguments'     => array DEFAULT array()
+   *
    */
   protected function declareQueues(array $queues = array()) {
     if (!empty($queues)) {
@@ -135,9 +144,13 @@ class AmqpMessageBroker implements MessageBrokerInterface {
           $queue['auto_delete'] = TRUE;
         }
 
+        if (!isset($queue['arguments'])) {
+          $queue['arguments'] = array();
+        }
+
         $this->channel->queue_declare($queue['name'], $queue['passive'],
                 $queue['durable'], $queue['exclusive'], $queue['auto_delete'],
-                $queue['nowait']);
+                $queue['nowait'], $queue['arguments']);
 
         if (!empty($queue['bindings'])) {
           foreach ($queue['bindings'] as $binding) {
@@ -308,7 +321,7 @@ class AmqpMessageBroker implements MessageBrokerInterface {
         }
         catch (CriticalErrorException $e) {
           $logger->logError("An critical exception was raised while consuming a message. Consumer will quit. Exception of type \"" . get_class($e) . "\": " . $e->getMessage() . "\nstacktrace: " . $e->getTraceAsString() . "\n");
-          watchdog('amqp_message_broker', 'An critical exception was raised while consuming a message by the "!consumer". Message: !message', 
+          watchdog('amqp_message_broker', 'An critical exception was raised while consuming a message by the "!consumer". Message: !message',
               array('!consumer' => $consumer_name, '!message' => print_r($message, 1)), WATCHDOG_CRITICAL);
           watchdog_exception('amqp_message_broker', $e);
 
@@ -322,7 +335,7 @@ class AmqpMessageBroker implements MessageBrokerInterface {
         }
         catch (Exception $e) {
           $logger->logError("An exception was raised while consuming a message. Exception of type \"" . get_class($e) . "\": " . $e->getMessage() . "\nstacktrace: " . $e->getTraceAsString() . "\n");
-          watchdog('amqp_message_broker', 'An exception was raised while consuming a message by the "!consumer". Message: !message', 
+          watchdog('amqp_message_broker', 'An exception was raised while consuming a message by the "!consumer". Message: !message',
               array('!consumer' => $consumer_name, '!message' => print_r($message, 1)), WATCHDOG_ERROR);
           watchdog_exception('amqp_message_broker', $e);
         }
